@@ -16,7 +16,15 @@ const connection = await mysql.createConnection(pool);
 
 export class ProductModel {
   static async getAll ({ category }) {
-    let sql = `SELECT BIN_TO_UUID(p.id) id, p.name, p.price, c.name as category FROM product p JOIN category c ON p.category_id = c.id`;
+    let sql = `
+      SELECT 
+        BIN_TO_UUID(p.id) id, 
+        p.name, 
+        p.price, 
+        c.name as category 
+      FROM product p 
+      JOIN category c ON p.category_id = c.id
+    `;
     const params = [];
 
     if (category) {
@@ -84,10 +92,7 @@ export class ProductModel {
     const finalValues = [...values, id];
 
     try {
-      const [result] = await connection.query(
-        `UPDATE product SET ${setString} WHERE id = UUID_TO_BIN(?)`,
-        finalValues
-      );
+      const [result] = await connection.query(`UPDATE product SET ${setString} WHERE id = UUID_TO_BIN(?)`, finalValues);
       
       return result.affectedRows > 0;
     } catch (e) {
