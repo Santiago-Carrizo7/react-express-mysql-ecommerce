@@ -1,0 +1,134 @@
+:root {
+  --bg-color: #1a1a1a;
+  --card-bg: #242424;
+  --text-color: rgba(255, 255, 255, 0.87);
+  --primary: #646cff;
+  --primary-hover: #535bf2;
+  --danger: #ff4d4d;
+  --danger-hover: #cc0000;
+  --success: #00cc66;
+  --border: #333;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
+}
+
+/* HEADER */
+header {
+  background-color: var(--card-bg);
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+nav a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: var(--primary);
+}
+
+/* HOME GRID */
+.home-container { /* Agregale esta clase al div padre de Home.jsx */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* PRODUCT CARD */
+.productContainer {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s;
+}
+
+.productContainer:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary);
+}
+
+.productTitle {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.productImage {
+  width: 100%;
+  height: 200px;
+  object-fit: cover; /* Para que no se deforme la foto */
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.productDescription {
+  font-size: 0.9rem;
+  color: #aaa;
+  flex-grow: 1; /* Empuja el botón hacia abajo */
+  margin-bottom: 1rem;
+}
+
+/* BUTTONS */
+button {
+  cursor: pointer;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: border-color 0.25s, background-color 0.25s;
+}
+
+.addToCartButton {
+  background-color: var(--primary);
+  color: white;
+}
+.addToCartButton:hover {
+  background-color: var(--primary-hover);
+}
+
+.isInCartButton {
+  background-color: var(--success);
+  color: black;
+  cursor: default;
+}
+
+.removeFromCartButton {
+  background-color: transparent;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  margin-top: 10px;
+}
+.removeFromCartButton:hover {
+  background-color: var(--danger);
+  color: white;
+}
+
+.clearCartButton {
+  background-color: var(--danger);
+  color: white;
+  margin: 2rem;
+  display: block;
+}
+.clearCartButton:hover {
+  background-color: var(--danger-hover);
+}
