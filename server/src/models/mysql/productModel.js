@@ -32,11 +32,21 @@ export class ProductModel {
   } 
 
   static async getById ({ id }) {
-    const [product] = await connection.query(`
-      SELECT UUID_TO_BIN(p.id) id, p.name, p.price, c.name as category 
-      FROM product p JOIN category c ON p.category_id = c.id`
-      , [id]);
-    return product;
+    const query = `
+      SELECT 
+        BIN_TO_UUID(p.id) id, 
+        p.name, 
+        p.price, 
+        c.name as category 
+      FROM product p 
+      JOIN category c ON p.category_id = c.id
+      WHERE p.id = UUID_TO_BIN(?)
+    `;
+
+    const [product] = await connection.query(query, [id]);
+
+    if (product.length === 0) return null;
+    return product[0];
   }
 
   static async create ({ input }) {
