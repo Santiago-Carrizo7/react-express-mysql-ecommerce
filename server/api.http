@@ -1,7 +1,18 @@
+### Listar todos los productos
+
 GET http://localhost:1234/products
 
 
-####
+### Filtras productos por categoría
+
+GET http://localhost:1234/products?category=Monitores
+
+### Obtener un producto por ID
+
+GET http://localhost:1234/products/0f0d518b-b2de-4699-839f-8e2cedab43a0
+
+
+#### Agregar Producto
 POST http://localhost:1234/products
 Content-Type: application/json
 
@@ -11,7 +22,7 @@ Content-Type: application/json
     "category_id": "673a6e38-ef5e-11f0-850b-18c04d08d15d"
 }
 
-###
+### Actualizar Producto
 
 PATCH http://localhost:1234/products/eea69b22-89ab-4b0f-aa83-fa8e254fc50a
 Content-Type: application/json
@@ -21,6 +32,29 @@ Content-Type: application/json
     "price": 39999.00
 }
 
-###
+### Eliminar Producto
 
-DELETE http://localhost:1234/products/673d5233-ef5e-11f0-850b-18c04d08d15d
+DELETE http://localhost:1234/products/c4b69ad8-cbda-4b07-8404-4a61eecb2472
+
+
+### Registrar Usuario
+
+POST http://localhost:1234/auth/register
+Content-Type: application/json
+
+{
+    "random": "Campo para verificar que las validaciones funcionen",
+    "name": "Santiago",
+    "email": "santi3@test.com",
+    "password": "123456",
+    "phone": 3875708557
+}
+
+### Iniciar sesión
+POST http://localhost:1234/auth/login
+Content-Type: application/json
+
+{
+  "email": "santi@test.com",
+  "password": "123456"
+}
