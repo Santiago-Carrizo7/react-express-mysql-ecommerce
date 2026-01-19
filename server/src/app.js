@@ -9,9 +9,10 @@ const app = express();
 
 app.disable('x-powered-by');
 
-app.use(corsMiddleware());
 app.use(express.json());
 app.use(cookieParser());
+app.use(corsMiddleware());
+
 
 app.use('/products', productsRouter);
 app.use('/auth', authRouter);
