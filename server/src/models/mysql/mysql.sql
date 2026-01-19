@@ -27,10 +27,20 @@ CREATE TABLE user (
     phone VARCHAR(255) DEFAULT NULL
 );
 
+DROP TABLE IF EXISTS refresh_token;
+CREATE TABLE refresh_token (
+    id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+    token TEXT NOT NULL,
+    user_id BINARY(16) NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+);
+
 DROP TABLE IF EXISTS purchase_order;
 CREATE TABLE purchase_order (
     id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
-    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,  -- Automatizamos la fecha
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,  
     user_id BINARY(16) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
