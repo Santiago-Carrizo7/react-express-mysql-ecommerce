@@ -26,7 +26,7 @@ export class UserModel {
         }
     }
 
-    static async findOne ({ email }){
+    static async findByEmail ({ email }){
         const sql = `
             SELECT BIN_TO_UUID(id) id, name, email, password
             FROM user
@@ -39,9 +39,25 @@ export class UserModel {
             
             return users[0];
         } catch (e) {
-            console.error('Error en findOne:', e);
+            console.error('Error en findByEmail:', e);
             throw new Error('Error finding user');
         }
     }
 
+    static async findById ({ id }){
+        const sql = `
+            SELECT BIN_TO_UUID(id) id, name, email, phone
+            FROM user
+            WHERE id = UUID_TO_BIN(?)
+        `;  
+        try {
+            const [users] = await connection.query(sql, [id]);
+            if (users.length === 0) return null;
+            
+            return users[0];
+        } catch (e) {
+            console.error('Error en findById :', e);
+            throw new Error('Error finding user');
+        }
+    }
 }
