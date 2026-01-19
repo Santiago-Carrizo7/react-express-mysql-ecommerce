@@ -55,6 +55,13 @@ POST http://localhost:1234/auth/login
 Content-Type: application/json
 
 {
-  "email": "santi@test.com",
+  "email": "santi3@test.com",
   "password": "123456"
 }
+
+### Refrescar Token
+POST http://localhost:1234/auth/refresh
+
+
+### Cerrar sesión
+POST http://localhost:1234/auth/logout

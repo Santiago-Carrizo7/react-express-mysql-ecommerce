@@ -1,13 +1,13 @@
 import { Router } from 'express';
-
 import { ProductController } from '../controllers/productController.js';
+import { authMiddleware } from '../middlewares/session.js';
 
 export const productsRouter = Router();
 
 productsRouter.get('/', ProductController.getAll);
 
-productsRouter.post('/', ProductController.create);
+productsRouter.post('/', authMiddleware, ProductController.create);
 
-productsRouter.patch('/:id', ProductController.update);
+productsRouter.patch('/:id', authMiddleware, ProductController.update);
 
-productsRouter.delete('/:id', ProductController.delete);
+productsRouter.delete('/:id', authMiddleware, ProductController.delete);
