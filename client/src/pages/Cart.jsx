@@ -1,25 +1,47 @@
-import { useCart } from "./CartStore.jsx";
+import { useCart } from "../store/CartStore.jsx";
+import styles from "./Cart.module.css";
 
-export function Cart () {
-    const { cart, removeFromCart, clearCart } = useCart();
-    const total = cart.reduce((acc, item) => acc + item.price, 0);
-    
-    return (
-        <>
-            <button className="clearCartButton" onClick={clearCart}>Limpiar Carrito</button>
-            <div className="home-container">
-                {
-                    cart.map( (product) => (
-                        <div key={product.id} className="productContainer">
-                            <h3 className="productTitle">Producto: {product.title} - Precio: {product.price}</h3>
-                            <img src={product.image} alt={product.title} className="productImage"/>
-                            <p className="productDescription">Descripcion: {product.description}</p>
-                            <button className="removeFromCartButton" onClick={() => removeFromCart(product.id)}>Eliminar del Carrito</button>
-                        </div>
-                    ))
-                }
-            </div>
-            <p>Total a pagar: {total}</p>
-        </>
-    )
+export function Cart() {
+  const { cart, removeFromCart, clearCart } = useCart();
+  const total = cart.reduce((acc, item) => acc + item.price, 0);
+
+  return (
+    <div className={styles.pageContainer}>
+      <div className={styles.cartHeader}>
+        <button className={styles.clearButton} onClick={clearCart}>
+          Limpiar Carrito
+        </button>
+      </div>
+
+      <div className={styles.productGrid}>
+        {cart.map((product) => (
+          <div key={product.id} className={styles.productCard}>
+            <h3 className={styles.productTitle}>
+              Producto: {product.title} - Precio: {product.price}
+            </h3>
+            <img
+              src={product.image}
+              alt={product.title}
+              className={styles.productImage}
+            />
+            <p className={styles.productDescription}>
+              Descripcion: {product.description}
+            </p>
+            <button
+              className={styles.removeButton}
+              onClick={() => removeFromCart(product.id)}
+            >
+              Eliminar del Carrito
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <div className={styles.totalContainer}>
+        <p className={styles.totalText}>
+          Total a pagar: <span className={styles.totalAmount}>${total}</span>
+        </p>
+      </div>
+    </div>
+  );
 }
