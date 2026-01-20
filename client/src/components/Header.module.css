@@ -1,0 +1,98 @@
+.header {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    padding: 1rem 2rem;
+    background: rgba(15, 23, 42, 0.8); 
+    backdrop-filter: blur(10px); 
+    border-bottom: 1px solid #334155;
+    position: sticky;
+    top: 0;
+    z-index: 100; 
+    color: white;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    background: linear-gradient(90deg, #8b5cf6, #3b82f6); 
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.link {
+    color: #94a3b8;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.link:hover {
+    color: #fff;
+}
+
+
+.button {
+    background-color: #334155;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.button:hover {
+    background-color: #ef4444;
+}
+
+
+.cartLink {
+    position: relative;
+    display: flex;
+    align-items: center;
+    color: #94a3b8;
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+}
+
+.cartLink:hover {
+    color: #fff;
+}
+
+.badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background-color: #8b5cf6;
+    color: #fff;
+    font-size: 0.75rem;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.userWelcome {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    margin-right: 0.5rem;
+}
