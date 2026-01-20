@@ -6,11 +6,8 @@ const userSchema = z.object({
         invalid_type_error: 'Name must be a string'
     }),
     email: z.string().email(),
-    password: z.string({
-          required_error: 'Password is required.',
-          invalid_type_error: 'Password must be a string'
-        }),
-    phone: z.number().positive(), 
+    password: z.string().min(6),
+    phone: z.string().optional(), 
 })
 
 export function validateUser ( object ) {
