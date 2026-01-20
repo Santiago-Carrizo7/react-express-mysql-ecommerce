@@ -1,0 +1,19 @@
+
+.spinner {
+    box-sizing: border-box;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #8b5cf6;
+    animation: giros 1s linear infinite;
+}
+
+@keyframes giros {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
