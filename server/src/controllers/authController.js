@@ -140,7 +140,7 @@ export class AuthController {
         console.error('Error en refresh:', e);
         res.status(500).json({ error: 'Error interno' });
     }
-}
+  }
 
   static async logout(req, res) {
     const refresh_token  = req.cookies.refresh_token;
@@ -153,5 +153,22 @@ export class AuthController {
     res.clearCookie("refresh_token");
     
     res.json({ message: "Logout exitoso" });
-}
+  }
+
+  static async verifyAuth(req, res) {
+    const { id } = req.session.user;
+
+    try {
+      const user = await UserModel.findById({ id });
+      
+      if (!user) {
+        return res.status(401).json({ error: 'Usuario no encontrado' });
+      }
+
+      return res.json({ user });
+    } catch (e) {
+      console.error('Error en verify:', e);
+      res.status(500).json({ error: 'Error del servidor' });
+    }
+  }
 }
