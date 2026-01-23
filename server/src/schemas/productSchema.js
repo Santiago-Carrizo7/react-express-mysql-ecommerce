@@ -7,6 +7,8 @@ const productSchema = z.object({
     invalid_type_error: 'Name must be a string'
   }),
   price: z.number().positive(),
+  description: z.string().optional(),
+  image_url: z.string().url().optional(),
   category_id: z.string({
     required_error: 'Category ID is required.'
   }).uuid()

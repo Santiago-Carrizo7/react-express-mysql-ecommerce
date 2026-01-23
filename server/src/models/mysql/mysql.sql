@@ -14,6 +14,8 @@ CREATE TABLE product (
     id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
     name VARCHAR(128) NOT NULL,
     price DECIMAL(10,2)  NOT NULL CHECK (price > 0),
+    description TEXT,
+    image_url VARCHAR(255),
     category_id BINARY(16) NOT NULL,
     FOREIGN KEY (category_id) REFERENCES category (id)
 );

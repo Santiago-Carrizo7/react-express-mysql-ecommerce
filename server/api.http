@@ -19,6 +19,8 @@ Content-Type: application/json
 {
     "name": "Teclado Kumara",
     "price": 39999.00,
+    "description": "Potencia pura para tus juegos y desarrollo. Procesador i7, 16GB RAM.",
+    "image_url": "https://images.unsplash.com/photo-1603302576837-6378864aacd5?w=500&auto=format&fit=crop&q=60",
     "category_id": "673a6e38-ef5e-11f0-850b-18c04d08d15d"
 }
 

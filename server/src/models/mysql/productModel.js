@@ -5,12 +5,14 @@ import { DEFAULT_CONFIG } from '../../config/config.js';
 const connection = await mysql.createConnection(DEFAULT_CONFIG);
 
 export class ProductModel {
-  static async getAll ({ category }) {
+  static async getAll ({ category } = {}) {
     let sql = `
       SELECT 
         BIN_TO_UUID(p.id) id, 
         p.name, 
-        p.price, 
+        p.price,
+        p.description,
+        p.image_url,
         c.name as category 
       FROM product p 
       JOIN category c ON p.category_id = c.id
@@ -34,7 +36,9 @@ export class ProductModel {
       SELECT 
         BIN_TO_UUID(p.id) id, 
         p.name, 
-        p.price, 
+        p.price,
+        p.description,
+        p.image_url  
         c.name as category 
       FROM product p 
       JOIN category c ON p.category_id = c.id
@@ -51,6 +55,8 @@ export class ProductModel {
     const {
       name,
       price,
+      description,
+      image_url,
       category_id
     } = input;
 
@@ -59,8 +65,8 @@ export class ProductModel {
     try {
       await connection.query(
         `INSERT INTO product (id, name, price, category_id)
-        VALUES (UUID_TO_BIN(?), ?, ?, UUID_TO_BIN(?))`,
-        [uuid, name, price, category_id]
+        VALUES (UUID_TO_BIN(?), ?, ?, ?, ?, UUID_TO_BIN(?))`,
+        [uuid, name, price, description, image_url, category_id]
       );
     } catch (e) {
       console.error(e);
@@ -72,13 +78,10 @@ export class ProductModel {
   static async update ({ id, input }) {
     const keys = Object.keys(input);   
     const values = Object.values(input); 
-    // Si no hay keys para actualizar, salimos
     if (keys.length === 0) return false;
 
-    // Armamos la parte del SET dinámicamente
     const setString = keys.map(key => `${key} = ?`).join(', ');
 
-    // Agregamos el ID al final de los valores para el WHERE
     const finalValues = [...values, id];
 
     try {
@@ -95,7 +98,6 @@ export class ProductModel {
     try {
       const [result] = await connection.query('DELETE FROM product WHERE id = UUID_TO_BIN(?)', [id]);
 
-      // affectedRows si borró algo (1) o no encontró nada (0)
       return result.affectedRows > 0;
     } catch (e) {
       console.error(e);
