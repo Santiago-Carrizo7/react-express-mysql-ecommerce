@@ -22,6 +22,8 @@ export function Header() {
 
       <nav className={styles.nav}>
         <Link to="/" className={styles.link}>Inicio</Link>
+
+        <Link to="/products" className={styles.link}>Productos</Link>
         
         <Link to="/cart" className={styles.cartLink}>
             Carrito
