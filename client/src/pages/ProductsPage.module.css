@@ -1,0 +1,191 @@
+.pageContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    min-height: 100vh;
+    color: #f8fafc;
+    font-family: 'Inter', sans-serif;
+}
+
+.title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #fff;
+    border-left: 5px solid #8b5cf6;
+    padding-left: 1rem;
+}
+
+
+.contentWrapper {
+    display: flex;
+    gap: 2rem;
+}
+
+
+.filtersSidebar {
+    width: 250px;
+    flex-shrink: 0; 
+    background-color: #1e293b;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    height: fit-content;
+    border: 1px solid #334155;
+}
+
+.filterGroup {
+    margin-bottom: 1.5rem;
+}
+
+.filterLabel {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #e2e8f0;
+}
+
+.searchInput, .selectInput, .priceInput {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #0f172a;
+    border: 1px solid #475569;
+    border-radius: 0.5rem;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.priceRow {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.filterButton {
+    width: 100%;
+    background-color: #8b5cf6;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 1rem;
+    transition: background 0.2s;
+}
+
+.filterButton:hover {
+    background-color: #7c3aed;
+}
+
+.clearButton {
+    width: 100%;
+    background-color: transparent;
+    color: #94a3b8;
+    border: 1px solid #475569;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+
+
+.productsGrid {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+
+.noResults {
+    text-align: center;
+    width: 100%;
+    padding: 3rem;
+    background: #1e293b;
+    border-radius: 1rem;
+    color: #94a3b8;
+}
+
+.card {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    border-color: #8b5cf6;
+}
+
+.cardImage {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    background-color: #020617;
+}
+
+.cardInfo {
+    padding: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.cardTitle {
+    font-size: 1rem;
+    margin: 0 0 0.5rem 0;
+    color: #f1f5f9;
+}
+
+.cardPrice {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #38bdf8;
+    margin-top: auto;
+}
+
+@media (max-width: 768px) {
+    .contentWrapper {
+        flex-direction: column;
+    }
+    .filtersSidebar {
+        width: 100%;
+    }
+}
+
+
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  user-select: none;
+}
+
+.checkboxInput {
+  accent-color: #8b5cf6; 
+  margin-right: 10px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.countBadge {
+  background-color: #334155;
+  color: #94a3b8;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
