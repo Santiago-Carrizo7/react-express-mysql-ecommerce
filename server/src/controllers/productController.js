@@ -4,8 +4,14 @@ import { validateProduct, validatePartialProduct } from '../schemas/productSchem
 
 export class ProductController {
   static async getAll (req, res) {
-    const products = await ProductModel.getAll();
+    const { category, minPrice, maxPrice, search } = req.query;
+    const products = await ProductModel.getAll({ category, minPrice, maxPrice, search });
     res.json(products);
+  }
+
+  static async getCategoriesWithCount (req, res) {
+    const categories = await ProductModel.getCategoriesWithCount();
+    res.json(categories);
   }
 
   static async create (req, res) {
@@ -40,9 +46,9 @@ export class ProductController {
 
   static async delete (req, res) {
     const { id } = req.params;
-    const productIndex = ProductModel.delete({ id });
+    const wasDeleted = await ProductModel.delete({ id });
 
-    if (!productIndex) {
+    if (!wasDeleted) {
       return res.status(400).json({ error: 'Id de producto no encontrado' });
     }
 

@@ -5,7 +5,7 @@ import { DEFAULT_CONFIG } from '../../config/config.js';
 const connection = await mysql.createConnection(DEFAULT_CONFIG);
 
 export class ProductModel {
-  static async getAll ({ category } = {}) {
+  static async getAll ({ categories = [], minPrice = '', maxPrice = '', search = '' } = {}) {
     let sql = `
       SELECT 
         BIN_TO_UUID(p.id) id, 
@@ -16,12 +16,29 @@ export class ProductModel {
         c.name as category 
       FROM product p 
       JOIN category c ON p.category_id = c.id
+      WHERE 1=1
     `;
     const params = [];
 
-    if (category) {
-      sql += ` WHERE c.name = ?`;
-      params.push(category);
+    if (categories.length > 0) {
+      const placeHolders = categories.map(() => '?').join(', ');
+      sql += ` AND c.name IN (${placeHolders})`;
+      params.push(...categories);
+    }
+
+    if (minPrice) {
+      sql += ` AND p.price >= ?`;
+      params.push(minPrice);
+    }
+
+    if (maxPrice) {
+      sql += ` AND p.price <= ?`;
+      params.push(maxPrice);
+    }
+
+    if (search) {
+      sql += ` AND p.name LIKE ?`;
+      params.push(`%${search}%`);
     }
 
     const [products] = params.length > 0 
@@ -31,6 +48,18 @@ export class ProductModel {
     return products;
   } 
 
+  static async getCategoriesWithCount() {
+    const sql = `
+      SELECT c.name, COUNT(*) as count
+      FROM product p
+      JOIN category c ON c.id = p.category_id
+      GROUP BY c.id 
+    `;
+
+    const [categories] = await connection.query(sql);
+    return categories;
+  }
+
   static async getById ({ id }) {
     const query = `
       SELECT 
@@ -38,7 +67,7 @@ export class ProductModel {
         p.name, 
         p.price,
         p.description,
-        p.image_url  
+        p.image_url,  
         c.name as category 
       FROM product p 
       JOIN category c ON p.category_id = c.id
@@ -64,7 +93,7 @@ export class ProductModel {
 
     try {
       await connection.query(
-        `INSERT INTO product (id, name, price, category_id)
+        `INSERT INTO product (id, name, price, description, image_url, category_id)
         VALUES (UUID_TO_BIN(?), ?, ?, ?, ?, UUID_TO_BIN(?))`,
         [uuid, name, price, description, image_url, category_id]
       );
