@@ -49,7 +49,7 @@ export class RefreshTokenModel {
         await connection.query(sql, [token]);
     }
 
-    // Para Cerrar Session en todos los dispositivos
+    
     static async deleteAllForUser ({ user_id }) {
         const sql = `DELETE FROM refresh_token WHERE user_id = UUID_TO_BIN(?)`;
         await connection.query(sql, [user_id]);
