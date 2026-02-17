@@ -1,4 +1,4 @@
-import { useAuthStore } from "../store/AuthStore.jsx";
+import { useAuthStore } from "../../store/AuthStore.jsx";
 import { useForm } from "react-hook-form"
 import { useNavigate, Link } from "react-router-dom"
 import styles from "./Register.module.css";

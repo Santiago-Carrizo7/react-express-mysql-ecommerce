@@ -1,14 +1,14 @@
 import { Route, Routes } from "react-router-dom";
 import { useAuthStore } from "./store/AuthStore.jsx";
 import { useEffect } from "react";
-import { Header } from "./components/Header.jsx";
+import { Header } from "./components/header/Header.jsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
-import { Home } from "./pages/Home.jsx";
-import { Cart } from "./pages/Cart.jsx";
-import { Login } from "./pages/Login.jsx";
-import { ProductsPage } from "./pages/ProductsPage.jsx";
-import { Register } from "./pages/Register.jsx";
-import { Footer } from "./components/Footer.jsx";
+import { Home } from "./pages/home/Home.jsx";
+import { Cart } from "./pages/cart/Cart.jsx";
+import { Login } from "./pages/login/Login.jsx";
+import { ProductsPage } from "./pages/productsPage/ProductsPage.jsx";
+import { Register } from "./pages/register/Register.jsx";
+import { Footer } from "./components/footer/Footer.jsx";
 
 export default function App() {
   const { checkAuth } = useAuthStore();

@@ -1,9 +1,9 @@
-import { useCart } from "../store/CartStore.jsx";
+import { useCart } from "../../store/CartStore.jsx";
 import styles from "./Cart.module.css";
 
 export function Cart() {
   const { cart, removeFromCart, clearCart } = useCart();
-  const total = cart.reduce((acc, item) => acc + item.price, 0);
+  const total = cart.reduce((acc, item) => acc + Number(item.price), 0);
 
   return (
     <div className={styles.pageContainer}>
@@ -17,11 +17,11 @@ export function Cart() {
         {cart.map((product) => (
           <div key={product.id} className={styles.productCard}>
             <h3 className={styles.productTitle}>
-              Producto: {product.title} - Precio: {product.price}
+              Producto: {product.name} - Precio: ${Number(product.price).toLocaleString()}
             </h3>
             <img
-              src={product.image}
-              alt={product.title}
+              src={product.image_url}
+              alt={product.name}
               className={styles.productImage}
             />
             <p className={styles.productDescription}>
@@ -39,7 +39,7 @@ export function Cart() {
 
       <div className={styles.totalContainer}>
         <p className={styles.totalText}>
-          Total a pagar: <span className={styles.totalAmount}>${total}</span>
+          Total a pagar: <span className={styles.totalAmount}>${total.toLocaleString()}</span>
         </p>
       </div>
     </div>
