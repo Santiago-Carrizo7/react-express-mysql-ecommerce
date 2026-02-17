@@ -49,7 +49,7 @@ Content-Type: application/json
     "name": "Santiago",
     "email": "santi3@test.com",
     "password": "123456",
-    "phone": 3875708557
+    "phone": "3875708557"
 }
 
 ### Iniciar sesión
@@ -67,3 +67,24 @@ POST http://localhost:1234/auth/refresh
 
 ### Cerrar sesión
 POST http://localhost:1234/auth/logout
+
+
+### Crear orden
+POST http://localhost:1234/orders
+Content-Type: application/json
+
+{
+    "products": [
+        {
+            "id": "6cb0ea49-f7f5-11f0-943c-18c04d08d15d",
+            "quantity": 2
+        },
+        {
+            "id": "6cb0ecf1-f7f5-11f0-943c-18c04d08d15d",
+            "quantity": 1
+        }
+    ]
+}
+
+### Listar órdenes del usuario
+GET http://localhost:1234/orders

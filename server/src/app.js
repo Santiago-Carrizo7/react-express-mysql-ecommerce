@@ -4,6 +4,7 @@ import { productsRouter } from './routes/productRoutes.js';
 import { authRouter } from './routes/authRoutes.js';
 import { corsMiddleware } from './middlewares/cors.js';
 import { PORT } from './config/config.js';
+import { orderRouter } from './routes/orderRoutes.js';
 
 const app = express();
 
@@ -16,7 +17,10 @@ app.use(corsMiddleware());
 
 app.use('/products', productsRouter);
 app.use('/auth', authRouter);
+app.use('/orders', orderRouter);
 
-app.listen(PORT, () => {
-  console.log('Servidor Corriendo en http://localhost:' + PORT);
-});
+if (!process.env.NODE_ENV) {
+  app.listen(PORT, () => {
+    console.log('Servidor Corriendo en http://localhost:' + PORT);
+  });
+}
