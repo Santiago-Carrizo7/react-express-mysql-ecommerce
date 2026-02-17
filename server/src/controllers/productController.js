@@ -4,8 +4,15 @@ import { validateProduct, validatePartialProduct } from '../schemas/productSchem
 
 export class ProductController {
   static async getAll (req, res) {
-    const { category, minPrice, maxPrice, search } = req.query;
-    const products = await ProductModel.getAll({ category, minPrice, maxPrice, search });
+    const { minPrice, maxPrice, search } = req.query;
+    const rawCategories = req.query.categories ?? req.query.category ?? [];
+    const categories = Array.isArray(rawCategories)
+      ? rawCategories
+      : rawCategories
+        ? [rawCategories]
+        : [];
+
+    const products = await ProductModel.getAll({ categories, minPrice, maxPrice, search });
     res.json(products);
   }
 
