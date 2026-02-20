@@ -1,8 +1,12 @@
 import { OrderModel } from "../models/mysql/orderModel.js";
 import { validateOrder } from "../schemas/orderSchema.js";
 
+import type { Request, Response } from "express";
+import type { Order } from "../schemas/orderSchema.js";
+import type { OrderFromInput } from "../types/index.js";
+
 export class OrderController {
-    static async create (req, res){
+    static async create (req: Request, res: Response): Promise<Response> {
         const { id: userId } = req.session.user;
         const result = validateOrder(req.body);
 
@@ -10,11 +14,11 @@ export class OrderController {
             return res.status(400).json({ error: JSON.parse(result.error.message) })
         }
 
-        const orderId = await OrderModel.create({ input: { user_id: userId, ...result.data } })
-        res.status(201).json({ message: `Su orden se realizo correctamente. Su numero de orden es ${orderId}` })
+        const orderId = await OrderModel.create({ input: { user_id: userId, ...result.data } });
+        return res.status(201).json({ message: `Su orden se realizo correctamente. Su numero de orden es ${orderId}` })
     }
 
-    static async getAllByUser (req, res) {
+    static async getAllByUser (req: Request, res: Response): Promise<Response> {
         const { id: userId } = req.session.user;
 
         const orders = await OrderModel.getAllByUser({ user_id: userId });
@@ -23,6 +27,6 @@ export class OrderController {
             return res.status(200).json([]);
         }
 
-        res.status(200).json(orders);
+        return res.status(200).json(orders);
     }
 }

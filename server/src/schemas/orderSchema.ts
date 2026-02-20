@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-const orderSchema = z.object({
+export const orderSchema = z.object({
     products: z.array(
         z.object({
             id: z.string().uuid(),
@@ -9,6 +9,8 @@ const orderSchema = z.object({
     )
 })
 
-export function validateOrder ( obj ){
+export type Order = z.infer<typeof orderSchema>;
+
+export function validateOrder ( obj: unknown ){
     return orderSchema.safeParse(obj);
 }

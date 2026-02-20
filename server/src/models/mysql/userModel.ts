@@ -2,10 +2,13 @@ import mysql2 from 'mysql2/promise';
 import { randomUUID } from 'node:crypto';
 import { DEFAULT_CONFIG } from '../../config/config.js';
 
+import type { UserFromDB } from '../../types/index.js';
+import type { User } from '../../schemas/userSchema.js';
+
 const connection = await mysql2.createConnection(DEFAULT_CONFIG);
 
 export class UserModel {
-    static async create ({ name, email, password, phone }) {
+    static async create ({ name, email, password, phone } : User) {
         const uuid = randomUUID();
         const sql = `
             INSERT INTO user (id, name, email, password, phone)
@@ -15,18 +18,21 @@ export class UserModel {
         try {
             await connection.query(sql, [uuid, name, email, password, phone]);
             return { id: uuid, name, email, phone };
-        } catch (e) {
-            console.error('Error en create user:', e);
+        } catch (error) {
+            console.error('Error en create user:', error);
+            
+            if (typeof error === 'object' && error !== null && 'code' in error){
+                if (error.code === 'ER_DUP_ENTRY') {
+                    throw new Error('El email ya está registrado');
+                }
 
-            if (e.code === 'ER_DUP_ENTRY') {
-                throw new Error('El email ya está registrado');
+                throw new Error('Error creating user');
             }
-
-            throw new Error('Error creating user');
+            
         }
     }
 
-    static async findByEmail ({ email }){
+    static async findByEmail ({ email } : {email: string}) {
         const sql = `
             SELECT BIN_TO_UUID(id) id, name, email, password
             FROM user
@@ -34,7 +40,7 @@ export class UserModel {
         `;
 
         try {
-            const [users] = await connection.query(sql, [email]);
+            const [users] = await connection.query(sql, [email]) as [UserFromDB[], unknown];
             if (users.length === 0) return null;
             
             return users[0];
@@ -44,14 +50,14 @@ export class UserModel {
         }
     }
 
-    static async findById ({ id }){
+    static async findById ({ id } : {id: string}){
         const sql = `
             SELECT BIN_TO_UUID(id) id, name, email, phone
             FROM user
             WHERE id = UUID_TO_BIN(?)
         `;  
         try {
-            const [users] = await connection.query(sql, [id]);
+            const [users] = await connection.query(sql, [id]) as [UserFromDB[], unknown];
             if (users.length === 0) return null;
             
             return users[0];

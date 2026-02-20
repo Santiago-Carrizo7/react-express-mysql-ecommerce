@@ -2,10 +2,12 @@ import mysql2 from 'mysql2/promise';
 import { DEFAULT_CONFIG } from '../../config/config.js';
 import { randomUUID } from 'node:crypto';
 
+import type { RefreshToken } from '../../types/index.js';
+
 const connection = await mysql2.createConnection(DEFAULT_CONFIG);
 
 export class RefreshTokenModel {
-    static async create ({ token, user_id, expiresAt}) {
+    static async create ({ token, user_id, expiresAt} : RefreshToken) {
         const uuid = randomUUID();
 
         const sql = `
@@ -22,7 +24,7 @@ export class RefreshTokenModel {
         }
     }
 
-    static async findByToken ({ token }) {
+    static async findByToken ({ token } : { token: string }) {
         const sql =`
             SELECT 
               BIN_TO_UUID(r.user_id) user_id, 
@@ -35,22 +37,22 @@ export class RefreshTokenModel {
         `;
 
         try {
-            const [token] = await connection.query(sql, [token]);
-            if (token.length === 0) return null;
-            return token[0]; 
+            const [tokenDB] = await connection.query(sql, [token]) as [{ user_id: string, expires_at: Date, email: string, name: string }[], unknown];
+            if (tokenDB.length === 0) return null;
+            return tokenDB[0]; 
         } catch (e) {
             console.error('Error buscando refresh token: ', e);
             throw new Error('Error finding token');
         }
     }
 
-    static async delete ({ token }) {
+    static async delete ({ token } : { token: string }) {
         const sql = `DELETE FROM refresh_token WHERE token = ?`;
         await connection.query(sql, [token]);
     }
 
     
-    static async deleteAllForUser ({ user_id }) {
+    static async deleteAllForUser ({ user_id } : { user_id: string }) {
         const sql = `DELETE FROM refresh_token WHERE user_id = UUID_TO_BIN(?)`;
         await connection.query(sql, [user_id]);
     }

@@ -2,10 +2,13 @@ import mysql from 'mysql2/promise';
 import { randomUUID } from 'node:crypto';
 import { DEFAULT_CONFIG } from '../../config/config.js';
 
+import type { Order } from '../../schemas/orderSchema.js';
+import type { OrderFromDB, OrderFromInput } from '../../types/index.js';
+
 const connection = await mysql.createConnection(DEFAULT_CONFIG);
 
 export class OrderModel {
-    static async create({ input }) {
+    static async create({ input } : { input: OrderFromInput & Order}) {
         const { user_id, products } = input;
         
         try {
@@ -25,10 +28,15 @@ export class OrderModel {
             `;
 
             const productIds = products.map(p => p.id);
-            const [dbProducts] = await connection.query(sql, [productIds]);
+            const [dbProducts] = await connection.query(sql, [productIds]) as [{ id: string, price: number }[], unknown];
 
             for (const dbProduct of dbProducts) {
                 const itemFromInput = products.find(p => p.id === dbProduct.id);
+
+                if(!itemFromInput){
+                    await connection.rollback();
+                    throw new Error(`Producto con id ${dbProduct.id} no encontrado en la orden`);
+                }
 
                 await connection.query(`
                     INSERT INTO order_item (order_id, product_id, quantity, price)
@@ -47,7 +55,7 @@ export class OrderModel {
 
     }
 
-    static async getAllByUser ({ user_id }) {
+    static async getAllByUser ({ user_id } : { user_id: string }) {
         const sql = `
             SELECT 
               BIN_TO_UUID(po.id) as order_id,
@@ -63,7 +71,7 @@ export class OrderModel {
         `;
 
         try {
-            const [orders] = await connection.query(sql, [user_id])
+            const [orders] = await connection.query(sql, [user_id]) as [OrderFromDB[], unknown]
             if (orders.length == 0) return null;
             return orders;
         } catch (err) {

@@ -1,6 +1,6 @@
 import z from 'zod';
 
-const userSchema = z.object({
+export const userSchema = z.object({
     name: z.string({
         required_error: 'Name is required.',
         invalid_type_error: 'Name must be a string'
@@ -10,10 +10,12 @@ const userSchema = z.object({
     phone: z.string().optional(), 
 })
 
-export function validateUser ( object ) {
+export type User = z.infer<typeof userSchema>;
+
+export function validateUser ( object: unknown ) {
     return userSchema.safeParse(object);
 }
 
-export function validatePartialUser ( object ) {
+export function validatePartialUser ( object: unknown ) {
     return userSchema.partial().safeParse(object);
 }
