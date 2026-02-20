@@ -5,8 +5,8 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "dev": "node --env-file=.env --watch src/app.js",  
-  "start": "node --env-file=.env src/app.js"
+    "dev": "tsx watch --env-file=.env src/app.ts",
+    "start": "tsx watch --env-file=.env src/app.ts"
   },
   "dependencies": {
     "bcrypt": "6.0.0",
@@ -20,5 +20,15 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "6.0.0",
+    "@types/cookie-parser": "1.4.10",
+    "@types/cors": "2.8.19",
+    "@types/express": "5.0.6",
+    "@types/jsonwebtoken": "9.0.10",
+    "@types/node": "25.3.0",
+    "tsx": "4.21.0",
+    "typescript": "5.9.3"
   }
 }
