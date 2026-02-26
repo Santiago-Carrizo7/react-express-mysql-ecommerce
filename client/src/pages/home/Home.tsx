@@ -1,14 +1,15 @@
 import { useEffect, useState, useRef } from "react";
-import { useCart } from "../../store/CartStore.jsx";
-import { Hero } from "../../components/hero/Hero.jsx";
+import { useCart } from "../../store/CartStore.js";
+import { Hero } from "../../components/hero/Hero.js";
 import styles from "./Home.module.css";
 import api from "../../config/api.js";
-import { Spinner } from "../../components/spinner/Spinner.jsx";
+import { Spinner } from "../../components/spinner/Spinner.js";
+import { Product } from "../../types/index.js";
 
 export function Home() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const carouselRef = useRef(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   const { cart, addToCart } = useCart();
 
@@ -31,7 +32,7 @@ export function Home() {
     fetchProducts();
   }, []);
 
-  const scroll = (direction) => {
+  const scroll = (direction: string) => {
     if (carouselRef.current) {
       const { current } = carouselRef;
       const scrollAmount = 300;
@@ -43,7 +44,7 @@ export function Home() {
     }
   };
 
-  const isInCart = (product) => cart.some((item) => item.id === product.id);
+  const isInCart = (product: Product) => cart.some((item) => item.id === product.id);
 
   if (loading)
     return (
@@ -79,9 +80,6 @@ export function Home() {
                       }
                       alt={product.name}
                       className={styles.productImage}
-                      onError={(e) => {
-                        e.target.src = "https://placehold.co/400?text=No+Image";
-                      }}
                     />
                   </div>
 

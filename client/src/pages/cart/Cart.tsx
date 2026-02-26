@@ -1,4 +1,4 @@
-import { useCart } from "../../store/CartStore.jsx";
+import { useCart } from "../../store/CartStore.js";
 import styles from "./Cart.module.css";
 
 export function Cart() {
@@ -20,12 +20,12 @@ export function Cart() {
               Producto: {product.name} - Precio: ${Number(product.price).toLocaleString()}
             </h3>
             <img
-              src={product.image_url}
+              src={product.image_url || "https://placehold.co/600x400?text=Sin+Imagen"}
               alt={product.name}
               className={styles.productImage}
             />
             <p className={styles.productDescription}>
-              Descripcion: {product.description}
+              {product.description ? `Descripcion: ${product.description}` : "Sin descripción"}
             </p>
             <button
               className={styles.removeButton}

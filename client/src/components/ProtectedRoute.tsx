@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuthStore } from "../store/AuthStore.jsx";
-import { Spinner } from "./spinner/Spinner.jsx";
+import { useAuthStore } from "../store/AuthStore.js";
+import { Spinner } from "./spinner/Spinner.js";
 
 export const ProtectedRoute = () => {
   const { isAuthenticated, loading } = useAuthStore();

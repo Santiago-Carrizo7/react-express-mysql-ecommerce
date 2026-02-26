@@ -1,7 +1,8 @@
-import { useAuthStore } from "../../store/AuthStore.jsx";
+import { useAuthStore } from "../../store/AuthStore.js";
 import { useForm } from "react-hook-form"
 import { useNavigate, Link } from "react-router-dom"
 import styles from "./Register.module.css";
+import type { RegisterFormInputs } from "../../types/index.js";
 
 export function Register () {
     const navigate = useNavigate();
@@ -9,11 +10,11 @@ export function Register () {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm();
+    } = useForm<RegisterFormInputs>();
 
     const { signup } = useAuthStore();
 
-    const onSubmit = async (data) => {
+    const onSubmit = async (data: RegisterFormInputs) => {
         const success = await signup(data);
         if(success) {
             navigate('/')

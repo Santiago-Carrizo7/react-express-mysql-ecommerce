@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../store/AuthStore.jsx"; 
-import { useCart } from "../../store/CartStore.jsx"; 
+import { useAuthStore } from "../../store/AuthStore.js"; 
+import { useCart } from "../../store/CartStore.js"; 
 import styles from "./Header.module.css";
 
 export function Header() {

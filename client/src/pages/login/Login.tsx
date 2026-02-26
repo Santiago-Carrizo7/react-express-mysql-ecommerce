@@ -1,8 +1,9 @@
-import { useAuthStore } from "../../store/AuthStore.jsx";
+import { useAuthStore } from "../../store/AuthStore.js";
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
-import { Spinner } from "../../components/spinner/Spinner.jsx";
+import { Spinner } from "../../components/spinner/Spinner.js";
 import styles from "./Login.module.css";
+import type { LoginFormInputs } from "../../types/index.js";
 
 export function Login() {
   const navigate = useNavigate();
@@ -10,16 +11,17 @@ export function Login() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<LoginFormInputs>();
 
   const { signin, loading, errors: authErrors } = useAuthStore();
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: LoginFormInputs) => {
     const success = await signin(data);
     if (success) {
       navigate("/");
     }
   };
+
   return (
     <div className={styles.pageContainer}>
       <div className={styles.card}>

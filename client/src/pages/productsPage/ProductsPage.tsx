@@ -1,20 +1,21 @@
 import { useEffect, useState } from "react";
 import api from "../../config/api.js";
-import { Spinner } from "../../components/spinner/Spinner.jsx";
-import { useCart } from "../../store/CartStore.jsx";
+import { Spinner } from "../../components/spinner/Spinner.js";
+import { useCart } from "../../store/CartStore.js";
 import styles from "./ProductsPage.module.css";
+import { Category, Filter, Product } from "../../types/index.js";
 
 export function ProductsPage() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<Filter>({
     search: "",
     categories: [],
     minPrice: "",
     maxPrice: "",
   });
-  const [categoriesList, setCategoriesList] = useState([]);
+  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
 
   const { addToCart } = useCart();
 
@@ -46,7 +47,7 @@ export function ProductsPage() {
     fetchProducts();
   }, [filters]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
@@ -55,7 +56,7 @@ export function ProductsPage() {
     setFilters({ search: "", categories: [], minPrice: "", maxPrice: "" });
   };
 
-  const handleCategoryChange = (e) => {
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const categorySelected = e.target.value;
     setFilters((prev) => {
       let updatedCategories = [...prev.categories];
