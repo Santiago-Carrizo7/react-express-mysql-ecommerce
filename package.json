@@ -1,0 +1,27 @@
+{
+  "name": "e-commerce",
+  "version": "1.0.0",
+  "description": "Un proyecto fullstack de e-commerce con React (Vite) en el frontend y Express + MySQL en el backend.",
+  "main": "index.js",
+  "scripts": {
+    "dev:client": "npm run dev --workspace=client",
+    "dev:backend": "npm run dev --workspace=server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Santiago-Carrizo7/react-express-mysql-ecommerce.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Santiago-Carrizo7/react-express-mysql-ecommerce/issues"
+  },
+  "homepage": "https://github.com/Santiago-Carrizo7/react-express-mysql-ecommerce#readme"
+}
