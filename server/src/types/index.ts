@@ -1,5 +1,5 @@
 
-export type UserFromDB = {
+export interface UserFromDB {
     id: string;
     email: string;
     password: string; 
@@ -7,7 +7,7 @@ export type UserFromDB = {
     phone?: string;
 }
 
-export type ProductFromDB = {
+export interface ProductFromDB {
     id: string; 
     name: string;
     price: string; 
@@ -16,24 +16,24 @@ export type ProductFromDB = {
     category_id: string;
 }
 
-export type GetAllParams = {
+export interface GetAllParams {
     categories?: string[], 
     minPrice?: string, 
     maxPrice?: string, 
     search?: string 
 }
 
-export type RefreshToken = {
+export interface RefreshToken {
     token: string;
     user_id: string;
     expiresAt: Date;
 }
 
-export type OrderFromInput = {
+export interface OrderFromInput {
     user_id: string;
 }
 
-export type OrderFromDB = {
+export interface OrderFromDB {
     order_id: string, 
     date: Date, 
     quantity: number, 
