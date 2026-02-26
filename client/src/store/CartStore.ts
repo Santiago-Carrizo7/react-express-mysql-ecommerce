@@ -1,11 +1,17 @@
 import { create } from "zustand";
+import type { Product } from "../types/index.js";
 
-export const useCart = create((set, get) => ({
-    //state
+interface CartState {
+    cart: Product[];
+    addToCart: (product: Product) => void;
+    removeFromCart: (id: string) => void;
+    clearCart: () => void;
+}
+
+export const useCart = create<CartState>((set, get) => ({
     cart: [],
 
 
-    //Actions
     addToCart: (product) => {
         const { cart } = get();
         if ( !cart.some(item => item.id === product.id) ){

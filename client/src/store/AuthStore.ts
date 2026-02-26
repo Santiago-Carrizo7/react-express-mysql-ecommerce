@@ -1,7 +1,20 @@
 import { create } from "zustand";
 import api from "../config/api.js"
+import type { User } from "../types/index.js"
+import { isAxiosError } from "axios";
 
-export const useAuthStore = create((set, get) => ({
+interface AuthState {
+    user: User | null;
+    isAuthenticated: boolean;
+    errors: string[];
+    loading: boolean;
+    signup: (user: User) => Promise<boolean>;
+    signin: (credentials: Pick<User, 'email' | 'password'>) => Promise<boolean>;
+    logout: () => Promise<void>;
+    checkAuth: () => Promise<void>;
+}
+
+export const useAuthStore = create<AuthState>((set) => ({
     user: null,
     isAuthenticated: false,
     errors: [],
@@ -23,10 +36,20 @@ export const useAuthStore = create((set, get) => ({
             return false;
         } catch (error) {
             console.error(error);
-            set({
-                loading: false, 
-                errors: error.response?.data?.error ? [error.response.data.error] : ['Error de conexión']
-            });
+
+            if ( isAxiosError(error) ) {
+                set({
+                    loading: false, 
+                    errors: error.response?.data?.error ? [error.response.data.error] : ['Error de conexión']
+                });
+            } else {
+                set({
+                    loading: false,
+                    isAuthenticated: false,
+                    errors: ['Ocurrió un error inesperado']
+                });
+            }
+            
             
             return false;
         }
@@ -47,11 +70,21 @@ export const useAuthStore = create((set, get) => ({
             return true; 
         } catch (error) {
             console.error(error);
-            set({ 
-                loading: false, 
-                isAuthenticated: false,
-                errors: error.response?.data?.error ? [error.response.data.error] : ['Error de conexión']
-            });
+
+            if ( isAxiosError(error) ) {
+                set({ 
+                    loading: false, 
+                    isAuthenticated: false,
+                    errors: error.response?.data?.error ? [error.response.data.error] : ['Error de conexión']
+                });
+            } else {
+                set({
+                    loading: false,
+                    isAuthenticated: false,
+                    errors: ['Ocurrió un error inesperado']
+                });
+            }
+           
 
             return false;
         }
