@@ -28,12 +28,12 @@ export interface RegisterFormInputs {
   phone?: string;
 }
 
-export type Category = {
+export interface Category {
     name: string;
     count: number;
 }
 
-export type Filter = {
+export interface Filter {
   search: string;
   categories: string[];
   minPrice: string;
