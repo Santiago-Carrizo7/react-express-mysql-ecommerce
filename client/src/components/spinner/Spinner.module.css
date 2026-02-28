@@ -1,19 +1,28 @@
 
+.spinnerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 3rem; 
+}
+
 .spinner {
     box-sizing: border-box;
-    width: 60px;
-    height: 60px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    border: 8px solid #f3f3f3;
-    border-top: 8px solid #8b5cf6;
-    animation: giros 1s linear infinite;
+    border: 4px solid var(--neutral-dark); 
+    border-top-color: var(--primary-teal);
+    border-right-color: var(--accent-lime);
+    animation: giros 0.85s ease-in-out infinite;
 }
 
 @keyframes giros {
-    from {
+    0% {
         transform: rotate(0deg);
     }
-    to {
+    100% {
         transform: rotate(360deg);
     }
 }
