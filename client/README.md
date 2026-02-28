@@ -1,13 +1,13 @@
-# E-Commerce Frontend - React + Vite
+# E-Commerce Frontend - React + Vite + TypeScript
 
-Frontend del proyecto e-commerce construido con React 19, Vite y Zustand para gestión de estado.
+Frontend moderno y responsivo para un e-commerce completo. Desarrollado con React 19, Vite, TypeScript y Zustand para gestión de estado global.
 
 ## 🚀 Inicio Rápido
 
 ### Requisitos
 
 - Node.js >= 18
-- npm o yarn
+- npm
 
 ### Instalación
 
@@ -37,66 +37,172 @@ npm run lint
 
 ## 🛠️ Tecnologías
 
-| Tecnología       | Versión | Uso                      |
-| ---------------- | ------- | ------------------------ |
-| React            | ^19.2.1 | Librería UI              |
-| Vite             | ^7.2.4  | Build tool y dev server  |
-| React Router DOM | ^7.12.0 | Enrutamiento             |
-| Zustand          | ^5.0.9  | Gestión de estado global |
-| ESLint           | ^9.39.1 | Linting                  |
+| Tecnología       | Versión | Descripción                      |
+| ---------------- | ------- | -------------------------------- |
+| React            | 19.2.1  | Librería UI moderna              |
+| Vite             | 7.2.4   | Build tool ultrarrápido          |
+| TypeScript       | 5.9.3   | Tipado estático                  |
+| React Router DOM | 7.12.0  | Enrutamiento client-side         |
+| Zustand          | 5.0.9   | Gestión de estado global         |
+| React Hook Form  | 7.71.1  | Gestión de formularios eficiente |
+| Axios            | 1.13.2  | Cliente HTTP                     |
+| ESLint           | 9.39.1  | Linting                          |
 
 ## 📂 Estructura del Proyecto
 
 ```
 src/
 ├── components/
-│   └── Header.jsx          # Encabezado con navegación
+│   ├── ProtectedRoute.tsx        # Rutas protegidas (requieren auth)
+│   ├── header/
+│   │   ├── Header.tsx            # Encabezado y navegación
+│   │   └── Header.module.css     # Estilos del header
+│   ├── footer/
+│   │   ├── Footer.tsx            # Pie de página
+│   │   └── Footer.module.css     # Estilos del footer
+│   ├── hero/
+│   │   ├── Hero.tsx              # Sección hero (inicio)
+│   │   └── Hero.module.css       # Estilos del hero
+│   └── spinner/
+│       ├── Spinner.tsx           # Componente de carga
+│       └── Spinner.module.css    # Estilos del spinner
+├── config/
+│   └── api.ts                    # Configuración de Axios
+├── hooks/
+│   └── useDebounce.ts            # Hook personalizado para debounce
 ├── pages/
-│   ├── Home.jsx            # Página principal (catálogo)
-│   └── Cart.jsx            # Página del carrito
-├── context/
-│   └── CartContext.jsx     # Context de carrito (legacy)
-├── hooks/                  # Custom hooks
+│   ├── home/
+│   │   ├── Home.tsx              # Página principal
+│   │   └── Home.module.css
+│   ├── login/
+│   │   ├── Login.tsx             # Página de login
+│   │   └── Login.module.css
+│   ├── register/
+│   │   ├── Register.tsx          # Página de registro
+│   │   └── Register.module.css
+│   ├── cart/
+│   │   ├── Cart.tsx              # Página del carrito (protegida)
+│   │   └── Cart.module.css
+│   └── productsPage/
+│       ├── ProductsPage.tsx      # Catálogo de productos
+│       └── ProductsPage.module.css
 ├── store/
-│   └── CartStore.jsx       # Store de Zustand para carrito
-├── services/
-│   └── products.js         # Datos de productos (mock)
-├── App.jsx                 # Componente raíz
-├── main.jsx                # Punto de entrada
-└── index.css               # Estilos globales
+│   ├── AuthStore.ts              # Store de autenticación (Zustand)
+│   └── CartStore.ts              # Store del carrito (Zustand)
+├── types/
+│   └── index.ts                  # Tipos compartidos
+├── App.tsx                       # Componente raíz
+├── main.tsx                      # Punto de entrada
+├── index.css                     # Estilos globales
+└── vite-env.d.ts                # Tipos de Vite
 ```
 
 ## 🎯 Características Implementadas
 
-- ✅ Listado de productos con categorías
-- ✅ Carrito de compras funcional
-- ✅ Gestión de estado con Zustand
-- ✅ Navegación con React Router
-- ✅ Responsive Design
-- ✅ Hot Module Replacement (HMR)
-- ✅ ESLint configurado
+- ✅ **Autenticación completa** - Registro, login, logout con JWT
+- ✅ **Carrito de compras** - Gestión con Zustand
+- ✅ **Catálogo de productos** - Filtraje por categorías
+- ✅ **Rutas protegidas** - Solo usuarios autenticados acceden al carrito
+- ✅ **Gestión de estado global** - Zustand para Auth y Cart
+- ✅ **Formularios validados** - React Hook Form
+- ✅ **Responsive Design** - Adaptado a todos los dispositivos
+- ✅ **Hot Module Replacement (HMR)** - Actualizaciones en tiempo real
+- ✅ **TypeScript** - Code type-safe
+- ✅ **ESLint configurado** - Código limpio y consistente
 
-## 🔄 Flujo de Estado
+## 📍 Rutas de la Aplicación
 
-El carrito se maneja con **Zustand** en lugar de Context API:
+| Ruta        | Descripción             | Autenticado |
+| ----------- | ----------------------- | ----------- |
+| `/`         | Página principal (Hero) | ❌          |
+| `/products` | Catálogo de productos   | ❌          |
+| `/login`    | Iniciar sesión          | ❌          |
+| `/register` | Crear nueva cuenta      | ❌          |
+| `/cart`     | Carrito de compras      | ✅          |
 
-```jsx
-// store/CartStore.jsx
-import { create } from "zustand";
+## 🔐 Autenticación
 
-export const useCartStore = create((set) => ({
-  cart: [],
-  addToCart: (product) => {
-    /* ... */
-  },
-  removeFromCart: (id) => {
-    /* ... */
-  },
-  clearCart: () => {
-    /* ... */
-  },
-}));
+El flujo de autenticación se maneja con **JWT** y se persiste en `localStorage`:
+
+1. **Registro** - El usuario crea una cuenta con email y contraseña
+2. **Login** - Obtiene token JWT y lo almacena localmente
+3. **Verificación automática** - Cada vez que se carga la app, se verifica si existe token válido
+4. **Logout** - Limpia tokens y redirige al inicio
+
+**AuthStore.ts** maneja todo el estado de autenticación de forma centralizada.
+
+## 🛒 Carrito de Compras
+
+El carrito se gestiona con **Zustand** ofreciendo:
+
+- Agregar/eliminar productos
+- Calcular totales automáticamente
+- Persistencia de datos (opcional)
+- Estado compartido entre componentes
+
+## 🎨 Estilos
+
+Se utilizan **CSS Modules** para encapsulación de estilos:
+
+```tsx
+import styles from "./Header.module.css";
+
+export function Header() {
+  return <header className={styles.header}>...</header>;
+}
 ```
+
+## 🔄 Flujo de Datos
+
+```
+Componentes
+    ↓
+React Hook Form (formularios)
+    ↓
+Zustand Stores (AuthStore, CartStore)
+    ↓
+Axios API Client (config/api.ts)
+    ↓
+Backend Express API
+```
+
+## 📝 Scripts Disponibles
+
+```bash
+npm run dev      # Servidor de desarrollo con HMR
+npm run build    # Build optimizado para producción
+npm run lint     # Ejecutar ESLint
+npm run preview  # Ver build de producción localmente
+```
+
+## 🚀 Optimizaciones
+
+- **Vite** - Build ultrarrápido y HMR instantáneo
+- **React 19** - Última versión con mejoras de rendimiento
+- **CSS Modules** - Evita conflictos de CSS
+- **Zustand** - Store ligero y performante
+- **React Hook Form** - Gestión de formularios sin re-renders innecesarios
+- **Debounce Hook** - Optimización de búsquedas y filtros
+
+## 🧑‍💻 Desarrollo
+
+Para desarrollar sobre este proyecto:
+
+1. Hace cambios en los archivos de `src/`
+2. Vite detecta cambios automáticamente y actualiza el navegador (HMR)
+3. ESLint puede ejecutarse con `npm run lint` para verificar código
+
+Los cambios en componentes, páginas y stores se reflejan instantáneamente.
+
+## 📱 Responsive Design
+
+El proyecto está completamente optimizado para:
+
+- 📱 Móviles (320px+)
+- 📱 Tablets (768px+)
+- 🖥️ Desktops (1024px+)
+
+Utiliza CSS Grid y Flexbox para un layout flexible y moderno.
 
 ## 📱 Componentes Principales
 

@@ -1,6 +1,6 @@
-# E-Commerce Backend - Express + MySQL
+# E-Commerce Backend - Express + TypeScript + MySQL
 
-API REST del proyecto e-commerce construida con Express y MySQL.
+API REST profesional para un e-commerce completo, con autenticación JWT, gestión de órdenes y productos. Desarrollada con Express, TypeScript y MySQL.
 
 ## 🚀 Inicio Rápido
 
@@ -21,82 +21,232 @@ npm install
 2. **Configurar variables de entorno**
 
 ```bash
-cp src/.env.example src/.env
+cp .env.example .env
 ```
 
-3. **Editar `.env` con tus credenciales MySQL**
+3. **Editar `.env` con tus credenciales**
 
 ```env
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=tu_contraseña
 DB_NAME=ecommerce
-PORT=1234
+PORT=5000
+NODE_ENV=development
+SECRET_JWT_KEY=tu_clave_secreta_aqui
+SALT_ROUNDS=10
 ```
 
 4. **Crear base de datos**
 
 ```bash
-# Inicia MySQL
 mysql -u root -p
+```
 
-# En la consola de MySQL
+En la consola de MySQL:
+
+```sql
 CREATE DATABASE ecommerce;
 USE ecommerce;
 SOURCE src/models/mysql/mysql.sql;
 SOURCE src/models/mysql/SeedData.sql;
 ```
 
-5. **Iniciar el servidor**
+5. **Inmediatamente después, inicia el servidor**
 
 ```bash
 npm run dev
 ```
 
-El servidor estará disponible en `http://localhost:1234`
+El servidor estará disponible en `http://localhost:5000`
 
 ## 🛠️ Tecnologías
 
-| Tecnología     | Versión | Uso                       |
-| -------------- | ------- | ------------------------- |
-| Express        | ^4.x    | Framework web             |
-| MySQL2/Promise | ^3.x    | Driver MySQL con Promises |
-| Dotenv         | 17.2.3  | Variables de entorno      |
-| CORS           | ^2.x    | Control de origen         |
-| Zod            | ^3.x    | Validación de esquemas    |
+| Tecnología     | Versión | Descripción                |
+| -------------- | ------- | -------------------------- |
+| Express        | 4.22.1  | Framework web robusto      |
+| TypeScript     | 5.9.3   | Tipado estático            |
+| MySQL2/Promise | 3.16.1  | Driver MySQL asincrónico   |
+| JWT            | 9.0.3   | Autenticación por tokens   |
+| Bcrypt         | 6.0.0   | Hash seguro de contraseñas |
+| Zod            | 3.25.76 | Validación de esquemas     |
+| CORS           | 2.8.5   | Control de origen          |
+| Dotenv         | 17.2.3  | Variables de entorno       |
 
 ## 📂 Estructura del Proyecto
 
 ```
 src/
-├── config/                 # Configuraciones (vacío, para futuro)
+├── config/
+│   └── config.ts                 # Configuración centralizada
 ├── controllers/
-│   └── productController.js  # Lógica de productos
+│   ├── authController.ts         # Registro, login, refresh, logout
+│   ├── productController.ts      # CRUD de productos y categorías
+│   └── orderController.ts        # Crear y obtener órdenes
 ├── middlewares/
-│   └── cors.js            # Configuración de CORS
+│   ├── cors.ts                   # Configuración de CORS
+│   └── session.ts                # Middleware de autenticación JWT
 ├── models/
 │   └── mysql/
-│       ├── productModel.js    # Modelo de datos de productos
-│       ├── mysql.sql          # Esquema de la BD
-│       └── SeedData.sql       # Datos de prueba
+│       ├── userModel.ts          # Modelo de usuarios
+│       ├── productModel.ts       # Modelo de productos
+│       ├── orderModel.ts         # Modelo de órdenes
+│       ├── refreshTokenModel.ts  # Modelo de refresh tokens
+│       ├── mysql.sql             # Esquema de la BD
+│       └── SeedData.sql          # Datos iniciales
 ├── routes/
-│   └── productRoutes.js    # Rutas de productos
+│   ├── authRoutes.ts             # Rutas de autenticación
+│   ├── productRoutes.ts          # Rutas de productos
+│   └── orderRoutes.ts            # Rutas de órdenes
 ├── schemas/
-│   └── productSchema.js    # Validaciones con Zod
-└── .env.example            # Variables de entorno template
+│   ├── userSchema.ts             # Validación de usuarios
+│   ├── loginSchema.ts            # Validación de login
+│   ├── productSchema.ts          # Validación de productos
+│   └── orderSchema.ts            # Validación de órdenes
+├── types/
+│   └── index.ts                  # Tipos compartidos
+└── app.ts                        # Configuración de Express
 ```
+
+## 🔐 Autenticación
+
+El proyecto usa **JWT (JSON Web Tokens)** con cookies HttpOnly para mayor seguridad:
+
+- **Registro**: Crear cuenta con email y contraseña hasheada
+- **Login**: Obtener tokens de acceso y refresh
+- **Refresh**: Renovar token de acceso sin volver a loguear
+- **Verify**: Validar token actual
+- **Logout**: Invalidar sesión
 
 ## 🔌 Endpoints de la API
 
-### Productos
+### Autenticación (`/auth`)
 
-#### GET `/products`
+| Método | Ruta        | Descripción             | Autenticado |
+| ------ | ----------- | ----------------------- | ----------- |
+| POST   | `/register` | Registrar nuevo usuario | ❌          |
+| POST   | `/login`    | Iniciar sesión          | ❌          |
+| POST   | `/refresh`  | Renovar token           | ❌          |
+| POST   | `/logout`   | Cerrar sesión           | ✅          |
+| GET    | `/verify`   | Verificar autenticación | ✅          |
 
-Obtiene todos los productos
+**Ejemplo - Registro:**
 
 ```bash
-curl http://localhost:1234/products
+curl -X POST http://localhost:5000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Juan Pérez",
+    "email": "juan@example.com",
+    "password": "Segura123!",
+    "phone": "1234567890"
+  }'
 ```
+
+**Ejemplo - Login:**
+
+```bash
+curl -X POST http://localhost:5000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "juan@example.com",
+    "password": "Segura123!"
+  }'
+```
+
+### Productos (`/products`)
+
+| Método | Ruta          | Descripción                  | Autenticado |
+| ------ | ------------- | ---------------------------- | ----------- |
+| GET    | `/`           | Obtener todos los productos  | ❌          |
+| GET    | `/categories` | Obtener categorías con count | ❌          |
+| POST   | `/`           | Crear producto               | ✅          |
+| PATCH  | `/:id`        | Actualizar producto          | ✅          |
+| DELETE | `/:id`        | Eliminar producto            | ✅          |
+
+**Ejemplo - Obtener productos:**
+
+```bash
+curl http://localhost:5000/products
+```
+
+**Ejemplo - Crear producto (requiere autenticación):**
+
+```bash
+curl -X POST http://localhost:5000/products \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer TOKEN" \
+  -d '{
+    "name": "Laptop",
+    "price": 1200,
+    "category": "Computación",
+    "stock": 10
+  }'
+```
+
+### Órdenes (`/orders`)
+
+| Método | Ruta | Descripción                 | Autenticado |
+| ------ | ---- | --------------------------- | ----------- |
+| POST   | `/`  | Crear nueva orden           | ✅          |
+| GET    | `/`  | Obtener órdenes del usuario | ✅          |
+
+**Ejemplo - Crear orden:**
+
+```bash
+curl -X POST http://localhost:5000/orders \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer TOKEN" \
+  -d '{
+    "items": [
+      { "productId": 1, "quantity": 2 }
+    ]
+  }'
+```
+
+## 🔒 Variables de Entorno
+
+Copia el contenido de `.env.example` a `.env`:
+
+```env
+DB_HOST=localhost              # Host de MySQL
+DB_USER=root                   # Usuario de MySQL
+DB_PASSWORD=contraseña         # Contraseña de MySQL
+DB_NAME=ecommerce              # Nombre de la BD
+PORT=5000                      # Puerto del servidor
+NODE_ENV=development           # Ambiente (development/production)
+SECRET_JWT_KEY=tu_clave_secreta  # Clave para firmar JWT
+SALT_ROUNDS=10                 # Rondas de bcrypt
+```
+
+## 📝 Scripts Disponibles
+
+```bash
+npm run dev    # Iniciar servidor con watch mode (tsx)
+npm start      # Iniciar servidor en producción
+```
+
+## ✨ Características Principales
+
+- ✅ Autenticación segura con JWT + Bcrypt
+- ✅ Refresh tokens automáticos
+- ✅ Validación de datos con Zod
+- ✅ CORS configurado
+- ✅ Gestión completa de productos (CRUD)
+- ✅ Sistema de órdenes
+- ✅ TypeScript para código type-safe
+- ✅ Middleware de sesión
+- ✅ Cookies HttpOnly
+
+## 🧑‍💻 Desarrollo
+
+El servidor utiliza `tsx watch` para recargar automáticamente la aplicación cuando haces cambios:
+
+```bash
+npm run dev
+```
+
+Los cambios en `src/**` se recargarán automáticamente sin necesidad de reiniciar.
 
 **Parámetros de query:**
 
