@@ -1,7 +1,6 @@
 import { useAuthStore } from "../../store/AuthStore.js";
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
-import { Spinner } from "../../components/spinner/Spinner.js";
 import styles from "./Login.module.css";
 import type { LoginFormInputs } from "../../types/index.js";
 
@@ -33,9 +32,7 @@ export function Login() {
         {authErrors.length > 0 && (
           <div className={styles.globalError}>
             {authErrors.map((error, index) => (
-              <span key={index} style={{ display: "block" }}>
-                {error}
-              </span>
+              <span key={index}>{error}</span>
             ))}
           </div>
         )}
@@ -73,16 +70,12 @@ export function Login() {
               <span className={styles.errorMsg}>{errors.password.message}</span>
             )}
           </label>
+
           <button className={styles.button} type="submit" disabled={loading}>
-            {loading ? "Verificando..." : "Iniciar Sesion"}
+            {loading ? "Verificando..." : "Iniciar Sesión"}
           </button>
-          {loading && (
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              {" "}
-              <Spinner />{" "}
-            </div>
-          )}
         </form>
+        
         <div className={styles.linkText}>
           ¿No tenés cuenta?{" "}
           <Link to="/register" className={styles.link}>

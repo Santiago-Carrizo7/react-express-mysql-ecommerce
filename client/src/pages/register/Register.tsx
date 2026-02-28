@@ -12,7 +12,7 @@ export function Register () {
         formState: { errors },
     } = useForm<RegisterFormInputs>();
 
-    const { signup } = useAuthStore();
+    const { signup, loading } = useAuthStore();
 
     const onSubmit = async (data: RegisterFormInputs) => {
         const success = await signup(data);
@@ -20,6 +20,7 @@ export function Register () {
             navigate('/')
         }
     }
+
     return (
         <div className={styles.pageContainer}>
             <div className={styles.card}>
@@ -27,7 +28,8 @@ export function Register () {
                 <p className={styles.subTitle}>Registrate para acceder a los mejores beneficios</p>
 
                 <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-                    <label className={styles.label}>Nombre Completo
+                    <label className={styles.label}>
+                        Nombre Completo
                         <input 
                             type="text" 
                             className={styles.input}
@@ -42,7 +44,9 @@ export function Register () {
                             <span className={styles.errorMsg}>{errors.name.message}</span>
                         )}
                     </label>
-                    <label className={styles.label}>Correo Electrónico
+
+                    <label className={styles.label}>
+                        Correo Electrónico
                         <input 
                             type="email" 
                             className={styles.input}
@@ -61,7 +65,9 @@ export function Register () {
                             <span className={styles.errorMsg}>{errors.email.message}</span>
                         )}
                     </label>
-                    <label className={styles.label}>Contraseña
+
+                    <label className={styles.label}>
+                        Contraseña
                         <input 
                             type="password" 
                             className={styles.input}
@@ -72,7 +78,7 @@ export function Register () {
                                 },
                                 pattern: {
                                     value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/,
-                                    message: 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número'
+                                    message: 'Mínimo 8 caracteres, una mayúscula, una minúscula y un número'
                                 }
                             })} 
                         />
@@ -80,14 +86,16 @@ export function Register () {
                             <span className={styles.errorMsg}>{errors.password.message}</span>
                         )}
                     </label>
-                    <label className={styles.label}>Telefono 
+
+                    <label className={styles.label}>
+                        Teléfono 
                         <input 
                             type="number"
                             className={styles.input} 
                             {...register('phone', {
                                 pattern: {
                                     value: /^\d{1,10}$/,
-                                    message: 'El teléfono debe tener solo números y menos de 10 dígitos'
+                                    message: 'El teléfono debe tener solo números y máximo 10 dígitos'
                                 }
                             })} 
                         />
@@ -95,12 +103,20 @@ export function Register () {
                             <span className={styles.errorMsg}>{errors.phone.message}</span>
                         )}
                     </label>
-                    <button className={styles.button} type="submit">Crear Cuenta</button>
+
+                    <button 
+                        className={styles.button} 
+                        type="submit" 
+                        disabled={loading}
+                    >
+                        {loading ? "Creando..." : "Crear Cuenta"}
+                    </button>
                 </form>
+
                 <div className={styles.linkText}>
                     ¿Ya tenés cuenta? <Link to="/login" className={styles.link}>Iniciá Sesión</Link>
                 </div>
             </div>
         </div>
-    )
+    );
 }
