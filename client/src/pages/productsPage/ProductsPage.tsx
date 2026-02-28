@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import api from "../../config/api.js";
 import { Spinner } from "../../components/spinner/Spinner.js";
 import { useCart } from "../../store/CartStore.js";
+import { useDebounce } from "../../hooks/useDebounce.js";
 import styles from "./ProductsPage.module.css";
-import { Category, Filter, Product } from "../../types/index.js";
+import type { Category, Filter, Product } from "../../types/index.js";
 
 export function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -17,12 +18,14 @@ export function ProductsPage() {
   });
   const [categoriesList, setCategoriesList] = useState<Category[]>([]);
 
-  const { addToCart } = useCart();
+  const debouncedFilters = useDebounce(filters, 500);
 
-  const fetchProducts = async () => {
+  const { cart, addToCart } = useCart();
+
+  const fetchProducts = async (filtersToUse: Filter) => {
     setLoading(true);
     try {
-      const res = await api.get("/products", { params: filters });
+      const res = await api.get("/products", { params: filtersToUse });
       setProducts(res.data);
     } catch (error) {
       console.error("Error cargando productos: ", error);
@@ -44,8 +47,8 @@ export function ProductsPage() {
   }, []);
 
   useEffect(() => {
-    fetchProducts();
-  }, [filters]);
+    fetchProducts(debouncedFilters);
+  }, [debouncedFilters]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -73,19 +76,33 @@ export function ProductsPage() {
     });
   };
 
+  const isInCart = (product: Product) =>
+    cart.some((item) => item.id === product.id);
+
   return (
     <div className={styles.pageContainer}>
       <h1 className={styles.title}>Catálogo de Productos</h1>
 
       <div className={styles.contentWrapper}>
         <aside className={styles.filtersSidebar}>
-          <form>
+          <div className={styles.sidebarHeader}>
+            <h2 className={styles.sidebarTitle}>Filtros</h2>
+            <button
+              type="button"
+              onClick={handleClear}
+              className={styles.clearButtonLink}
+            >
+              Limpiar
+            </button>
+          </div>
+
+          <form onSubmit={(e) => e.preventDefault()}>
             <div className={styles.filterGroup}>
               <label className={styles.filterLabel}>Buscar</label>
               <input
                 type="text"
                 name="search"
-                placeholder="Buscar producto..."
+                placeholder="Ej. Teclado..."
                 className={styles.searchInput}
                 value={filters.search}
                 onChange={handleChange}
@@ -107,14 +124,14 @@ export function ProductsPage() {
                       />
                       {cat.name}
                     </div>
-                    <span className={styles.countBadge}>({cat.count})</span>
+                    <span className={styles.countBadge}>{cat.count}</span>
                   </label>
                 ))}
               </div>
             </div>
 
             <div className={styles.filterGroup}>
-              <label className={styles.filterLabel}>Precio</label>
+              <label className={styles.filterLabel}>Rango de Precio</label>
               <div className={styles.priceRow}>
                 <input
                   type="number"
@@ -134,54 +151,54 @@ export function ProductsPage() {
                 />
               </div>
             </div>
-
-            <button
-              type="button"
-              onClick={handleClear}
-              className={styles.clearButton}
-            >
-              Limpiar
-            </button>
           </form>
         </aside>
 
-        <main style={{ flex: 1 }}>
+        <main className={styles.mainContent}>
           {loading ? (
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <Spinner />
-            </div>
+            <Spinner />
           ) : products.length > 0 ? (
             <div className={styles.productsGrid}>
               {products.map((product) => (
-                <div key={product.id} className={styles.card}>
+                <article key={product.id} className={styles.card}>
                   <img
                     src={
                       product.image_url ||
-                      "https://placehold.co/400?text=No+Image"
+                      "https://placehold.co/400x400/2A2A40/FFFFFF?text=Sin+Imagen"
                     }
                     alt={product.name}
                     className={styles.cardImage}
+                    loading="lazy"
                   />
                   <div className={styles.cardInfo}>
                     <h3 className={styles.cardTitle}>{product.name}</h3>
                     <p className={styles.cardPrice}>
-                      $ {Number(product.price).toLocaleString()}
+                      $ {Number(product.price).toLocaleString("es-AR")}
                     </p>
-                    <button
-                      className={styles.filterButton}
-                      style={{ marginTop: "auto", fontSize: "0.9rem" }}
-                      onClick={() => addToCart(product)}
-                    >
-                      Añadir al Carrito
-                    </button>
+
+                    {isInCart(product) ? (
+                      <button className={styles.inCartBtn} disabled>
+                        ✓ En el carrito
+                      </button>
+                    ) : (
+                      <button
+                        className={styles.addToCartBtn}
+                        onClick={() => addToCart(product)}
+                      >
+                        Añadir al Carrito
+                      </button>
+                    )}
                   </div>
-                </div>
+                </article>
               ))}
             </div>
           ) : (
             <div className={styles.noResults}>
-              <h3>No encontramos nada </h3>
-              <p>Probá cambiando los términos de búsqueda o los filtros.</p>
+              <h3>No encontramos resultados</h3>
+              <p>
+                Probá cambiando los términos de búsqueda o limpiando los
+                filtros.
+              </p>
             </div>
           )}
         </main>
