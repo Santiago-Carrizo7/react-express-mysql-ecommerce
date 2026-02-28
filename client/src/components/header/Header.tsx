@@ -39,14 +39,14 @@ export function Header() {
               {/* Futura implementación para el administrador */}
               {/* <Link to="/admin" className={styles.link}>Admin</Link> */}
 
-              <button onClick={handleLogout} className={styles.button}>
+              <button onClick={handleLogout} className={`${styles.buttonBase} ${styles.buttonSecondary}`}>
                   Cerrar Sesión
               </button>
             </>
         ) : (
             <>
               <Link to="/login" className={styles.link}>Ingresar</Link>
-              <Link to="/register" className={styles.button} style={{backgroundColor: '#8b5cf6'}}>
+              <Link to="/register" className={`${styles.buttonBase} ${styles.buttonPrimary}`}>
                   Registrarse
               </Link>
             </>

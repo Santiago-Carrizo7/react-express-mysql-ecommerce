@@ -1,90 +1,116 @@
+
 .header {
     display: flex;
     justify-content: space-between; 
     align-items: center;
-    padding: 1rem 2rem;
-    background: rgba(15, 23, 42, 0.8); 
-    backdrop-filter: blur(10px); 
-    border-bottom: 1px solid #334155;
+    padding: 1.5rem 3rem; 
+    background-color: var(--neutral-dark); 
+    border-bottom: 1px solid var(--bg-dark);
     position: sticky;
     top: 0;
     z-index: 100; 
-    color: white;
 }
 
 .logo {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--primary-teal);
     text-decoration: none;
-    background: linear-gradient(90deg, #8b5cf6, #3b82f6); 
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+    transition: color var(--transition-fast);
+}
+
+.logo:hover {
+    color: var(--accent-lime);
 }
 
 .nav {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 2rem; 
 }
 
 .link {
-    color: #94a3b8;
+    color: var(--neutral-light);
     text-decoration: none;
     font-weight: 500;
-    font-size: 0.95rem;
-    transition: color 0.2s;
+    font-size: 1rem;
+    transition: color var(--transition-fast);
 }
 
 .link:hover {
-    color: #fff;
+    color: var(--pure-white);
 }
 
 
-.button {
-    background-color: #334155;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
+.buttonBase {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
     cursor: pointer;
     font-weight: 600;
-    transition: all 0.2s;
+    font-size: 0.95rem;
+    font-family: var(--font-main);
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.button:hover {
-    background-color: #ef4444;
+
+.buttonPrimary {
+    background-color: var(--primary-teal);
+    color: var(--bg-dark); 
+    border: 2px solid var(--primary-teal);
 }
 
+.buttonPrimary:hover {
+    background-color: var(--accent-lime);
+    border-color: var(--accent-lime);
+}
+
+
+.buttonSecondary {
+    background-color: transparent;
+    color: var(--primary-teal);
+    border: 2px solid var(--primary-teal);
+}
+
+.buttonSecondary:hover {
+    background-color: var(--primary-teal);
+    color: var(--bg-dark);
+}
 
 .cartLink {
     position: relative;
     display: flex;
     align-items: center;
-    color: #94a3b8;
+    color: var(--neutral-light);
     font-weight: 500;
-    font-size: 0.95rem;
+    font-size: 1rem;
     text-decoration: none;
+    transition: color var(--transition-fast);
 }
 
 .cartLink:hover {
-    color: #fff;
+    color: var(--pure-white);
 }
 
 .badge {
     position: absolute;
-    top: -8px;
-    right: -10px;
-    background-color: #8b5cf6;
-    color: #fff;
+    top: -10px;
+    right: -12px;
+    background-color: var(--accent-lime);
+    color: var(--bg-dark);
     font-size: 0.75rem;
-    width: 18px;
-    height: 18px;
+    min-width: 20px;
+    height: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    font-weight: bold;
+    font-weight: 700;
+    padding: 0 4px;
 }
 
 .userWelcome {
@@ -92,7 +118,11 @@
     align-items: center;
     gap: 0.5rem;
     font-weight: 500;
-    font-size: 0.95rem;
-    color: #e2e8f0;
-    margin-right: 0.5rem;
+    font-size: 1rem;
+    color: var(--neutral-light);
+    margin-right: 1rem;
+}
+
+.userWelcome strong {
+    color: var(--pure-white);
 }

@@ -1,32 +1,59 @@
 
 .hero {
-  background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.9)), 
+  background: linear-gradient(rgba(6, 6, 32, 0.75), rgba(6, 6, 32, 0.95)), 
               url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop');
   background-size: cover;
   background-position: center;
-  height: 400px;
+  min-height: 500px; 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin-bottom: 3rem;
-  border-bottom: 1px solid #334155;
+  padding: 2rem;
+  margin-bottom: 4rem; 
+  border-bottom: 1px solid var(--neutral-dark);
 }
 
 .heroTitle {
-  font-size: 3.5rem;
+  font-size: 4rem; 
   font-weight: 800;
   margin: 0;
-  background: linear-gradient(90deg, #a78bfa, #3b82f6);
+  background: linear-gradient(90deg, var(--primary-teal), var(--accent-lime));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  letter-spacing: -1px;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
 }
 
 .heroSubtitle {
   font-size: 1.25rem;
-  color: #94a3b8;
-  margin-top: 1rem;
+  color: var(--neutral-light);
+  margin-top: 1.5rem;
   max-width: 600px;
+  line-height: 1.6;
+}
+
+.ctaContainer {
+  margin-top: 2.5rem;
+}
+
+.buttonPrimary {
+  display: inline-flex;
+  background-color: var(--primary-teal);
+  color: var(--bg-dark); 
+  padding: 0.875rem 2rem;
+  border-radius: var(--radius-md);
+  font-family: var(--font-main);
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-decoration: none;
+  border: 2px solid var(--primary-teal);
+  transition: all var(--transition-fast);
+}
+
+.buttonPrimary:hover {
+  background-color: var(--accent-lime);
+  border-color: var(--accent-lime);
+  transform: translateY(-2px); 
 }
