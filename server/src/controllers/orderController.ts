@@ -2,8 +2,6 @@ import { OrderModel } from "../models/mysql/orderModel.js";
 import { validateOrder } from "../schemas/orderSchema.js";
 
 import type { Request, Response } from "express";
-import type { Order } from "../schemas/orderSchema.js";
-import type { OrderFromInput } from "../types/index.js";
 
 export class OrderController {
   static async create(req: Request, res: Response): Promise<Response> {
