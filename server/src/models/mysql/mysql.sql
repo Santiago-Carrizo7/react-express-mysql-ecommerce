@@ -42,7 +42,8 @@ CREATE TABLE refresh_token (
 DROP TABLE IF EXISTS purchase_order;
 CREATE TABLE purchase_order (
     id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
-    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,  
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('PENDING', 'PAID', 'CANCELLED') NOT NULL DEFAULT 'PENDING', 
     user_id BINARY(16) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
@@ -56,4 +57,16 @@ CREATE TABLE order_item (
     price DECIMAL(10,2) NOT NULL CHECK (price >= 0),
     FOREIGN KEY (order_id) REFERENCES purchase_order (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
+);
+
+DROP TABLE IF EXISTS payment;
+CREATE TABLE payment (
+    id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+    order_id BINARY(16) NOT NULL,
+    provider VARCHAR(64) NOT NULL,
+    provider_payment_id VARCHAR(255) UNIQUE NOT NULL,
+    amount DECIMAL(10,2) NOT NULL CHECK (amount >= 0),
+    status ENUM('REJECTED', 'APPROVED', 'IN_PROGRESS') NOT NULL DEFAULT 'IN_PROGRESS',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES purchase_order (id)
 );

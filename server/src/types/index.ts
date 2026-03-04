@@ -34,10 +34,25 @@ export interface OrderFromInput {
 }
 
 export interface OrderFromDB {
-    order_id: string, 
+    order_id: string,
+    status: 'PENDING' | 'PAID' | 'CANCELLED', 
     date: Date, 
     quantity: number, 
     price: number, 
     name: string, 
     image_url: string
+    product_id: string;
 }
+
+export interface PaymentFromDB {
+    id: string;
+    order_id: string;
+    provider: string;
+    provider_payment_id: string;
+    amount: number;
+    status: 'REJECTED' | 'APPROVED' | 'IN_PROGRESS';
+}
+
+export type OrderStatus = 'PENDING' | 'PAID' | 'CANCELLED';
+
+export type PaymentStatus = 'REJECTED' | 'APPROVED' | 'IN_PROGRESS';
