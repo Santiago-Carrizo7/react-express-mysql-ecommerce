@@ -1,10 +1,7 @@
-import mysql2 from "mysql2/promise";
-import { DEFAULT_CONFIG } from "../../config/config.js";
+import { pool } from "../../config/database.js";
 import { randomUUID } from "node:crypto";
 
 import type { RefreshToken } from "../../types/index.js";
-
-const connection = await mysql2.createConnection(DEFAULT_CONFIG);
 
 export class RefreshTokenModel {
   static async create({ token, user_id, expiresAt }: RefreshToken) {
@@ -16,7 +13,7 @@ export class RefreshTokenModel {
         `;
 
     try {
-      await connection.query(sql, [uuid, token, user_id, expiresAt]);
+      await pool.query(sql, [uuid, token, user_id, expiresAt]);
       return true;
     } catch (e) {
       console.error("Error al guardar refresh token:", e);
@@ -37,7 +34,7 @@ export class RefreshTokenModel {
         `;
 
     try {
-      const [tokenDB] = (await connection.query(sql, [token])) as [
+      const [tokenDB] = (await pool.query(sql, [token])) as [
         { user_id: string; expires_at: Date; email: string; name: string }[],
         unknown,
       ];
@@ -51,11 +48,11 @@ export class RefreshTokenModel {
 
   static async delete({ token }: { token: string }) {
     const sql = `DELETE FROM refresh_token WHERE token = ?`;
-    await connection.query(sql, [token]);
+    await pool.query(sql, [token]);
   }
 
   static async deleteAllForUser({ user_id }: { user_id: string }) {
     const sql = `DELETE FROM refresh_token WHERE user_id = UUID_TO_BIN(?)`;
-    await connection.query(sql, [user_id]);
+    await pool.query(sql, [user_id]);
   }
 }

@@ -1,12 +1,10 @@
-import mysql from "mysql2/promise";
+import { pool } from "../../config/database.js";
 import { randomUUID } from "node:crypto";
-import { DEFAULT_CONFIG } from "../../config/config.js";
 
 import type { Product, PartialProduct } from "../../schemas/productSchema.js";
 import type { ProductFromDB, GetAllParams } from "../../types/index.js";
 import type { ResultSetHeader } from "mysql2";
 
-const connection = await mysql.createConnection(DEFAULT_CONFIG);
 
 export class ProductModel {
   static async getAll({
@@ -52,8 +50,8 @@ export class ProductModel {
 
     const [products] =
       params.length > 0
-        ? await connection.query(sql, params)
-        : await connection.query(sql);
+        ? await pool.query(sql, params)
+        : await pool.query(sql);
 
     return products;
   }
@@ -66,7 +64,7 @@ export class ProductModel {
       GROUP BY c.id 
     `;
 
-    const [categories] = (await connection.query(sql)) as [
+    const [categories] = (await pool.query(sql)) as [
       ProductFromDB[],
       unknown,
     ];
@@ -87,7 +85,7 @@ export class ProductModel {
       WHERE p.id = UUID_TO_BIN(?)
     `;
 
-    const [product] = (await connection.query(query, [id])) as [
+    const [product] = (await pool.query(query, [id])) as [
       ProductFromDB[],
       unknown,
     ];
@@ -102,7 +100,7 @@ export class ProductModel {
     const uuid = randomUUID();
 
     try {
-      (await connection.query(
+      (await pool.query(
         `INSERT INTO product (id, name, price, description, image_url, category_id)
         VALUES (UUID_TO_BIN(?), ?, ?, ?, ?, UUID_TO_BIN(?))`,
         [uuid, name, price, description, image_url, category_id],
@@ -124,7 +122,7 @@ export class ProductModel {
     const finalValues = [...values, id];
 
     try {
-      const [result] = (await connection.query(
+      const [result] = (await pool.query(
         `UPDATE product SET ${setString} WHERE id = UUID_TO_BIN(?)`,
         finalValues,
       )) as [ResultSetHeader, unknown];
@@ -138,7 +136,7 @@ export class ProductModel {
 
   static async delete({ id }: { id: string }) {
     try {
-      const [result] = (await connection.query(
+      const [result] = (await pool.query(
         "DELETE FROM product WHERE id = UUID_TO_BIN(?)",
         [id],
       )) as [ResultSetHeader, unknown];

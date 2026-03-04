@@ -1,11 +1,8 @@
-import mysql2 from "mysql2/promise";
+import { pool } from "../../config/database.js";
 import { randomUUID } from "node:crypto";
-import { DEFAULT_CONFIG } from "../../config/config.js";
 
 import type { UserFromDB } from "../../types/index.js";
 import type { User } from "../../schemas/userSchema.js";
-
-const connection = await mysql2.createConnection(DEFAULT_CONFIG);
 
 export class UserModel {
   static async create({ name, email, password, phone }: User) {
@@ -16,7 +13,7 @@ export class UserModel {
         `;
 
     try {
-      await connection.query(sql, [uuid, name, email, password, phone]);
+      await pool.query(sql, [uuid, name, email, password, phone]);
       return { id: uuid, name, email, phone };
     } catch (error) {
       console.error("Error en create user:", error);
@@ -39,7 +36,7 @@ export class UserModel {
         `;
 
     try {
-      const [users] = (await connection.query(sql, [email])) as [
+      const [users] = (await pool.query(sql, [email])) as [
         UserFromDB[],
         unknown,
       ];
@@ -59,7 +56,7 @@ export class UserModel {
             WHERE id = UUID_TO_BIN(?)
         `;
     try {
-      const [users] = (await connection.query(sql, [id])) as [
+      const [users] = (await pool.query(sql, [id])) as [
         UserFromDB[],
         unknown,
       ];
