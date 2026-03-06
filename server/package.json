@@ -5,8 +5,9 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "dev": "tsx watch --env-file=.env src/app.ts",
-    "start": "tsx watch --env-file=.env src/app.ts"
+    "build": "tsc",
+    "dev": "ts-node-dev src/app.ts",
+    "start": "node dist/app.js"
   },
   "dependencies": {
     "bcrypt": "6.0.0",
