@@ -21,8 +21,7 @@ app.use('/auth', authRouter);
 app.use('/orders', orderRouter);
 app.use('/payments', paymentRouter);
 
-if (!process.env.NODE_ENV) {
-  app.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log('Servidor Corriendo en http://localhost:' + PORT);
   });
-}
+
