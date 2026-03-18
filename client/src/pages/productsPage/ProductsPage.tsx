@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../../config/api.js";
 import { Spinner } from "../../components/spinner/Spinner.js";
 import { useCart } from "../../store/CartStore.js";
+import { useAuthStore } from "../../store/AuthStore.js";
 import { useDebounce } from "../../hooks/useDebounce.js";
 import styles from "./ProductsPage.module.css";
 import type { Category, Filter, Product } from "../../types/index.js";
 
 export function ProductsPage() {
+  const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -21,6 +24,16 @@ export function ProductsPage() {
   const debouncedFilters = useDebounce(filters, 500);
 
   const { cart, addToCart } = useCart();
+  const { isAuthenticated } = useAuthStore();
+
+  const handleAddToCart = (product: Product) => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    addToCart(product);
+  };
 
   const fetchProducts = async (filtersToUse: Filter) => {
     setLoading(true);
@@ -183,7 +196,7 @@ export function ProductsPage() {
                     ) : (
                       <button
                         className={styles.addToCartBtn}
-                        onClick={() => addToCart(product)}
+                        onClick={() => handleAddToCart(product)}
                       >
                         Añadir al Carrito
                       </button>

@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../../store/CartStore.js";
+import { useAuthStore } from "../../store/AuthStore.js";
 import { Hero } from "../../components/hero/Hero.js";
 import styles from "./Home.module.css";
 import api from "../../config/api.js";
@@ -13,6 +14,18 @@ export function Home() {
   const carouselRef = useRef<HTMLDivElement>(null);
 
   const { cart, addToCart } = useCart();
+
+  const { isAuthenticated } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleAddToCart = (product: Product) => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    addToCart(product);
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -132,7 +145,7 @@ export function Home() {
                     ) : (
                       <button
                         className={styles.addButton}
-                        onClick={() => addToCart(product)}
+                        onClick={() => handleAddToCart(product)}
                       >
                         Añadir al Carrito
                       </button>

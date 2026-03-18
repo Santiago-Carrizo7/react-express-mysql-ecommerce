@@ -8,7 +8,7 @@
     border-bottom: 1px solid var(--bg-dark);
     position: sticky;
     top: 0;
-    z-index: 100; 
+    z-index: 1000; 
 }
 
 .logo {
@@ -125,4 +125,109 @@
 
 .userWelcome strong {
     color: var(--pure-white);
+}
+
+/* Hamburger Menu Toggle Button */
+.menuToggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 1001;
+}
+
+.hamburger {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: var(--primary-teal);
+    position: relative;
+    transition: all var(--transition-fast);
+    border-radius: var(--radius-sm);
+}
+
+.hamburger::before,
+.hamburger::after {
+    content: '';
+    position: absolute;
+    width: 25px;
+    height: 3px;
+    background-color: var(--primary-teal);
+    left: 0;
+    transition: all var(--transition-fast);
+    border-radius: var(--radius-sm);
+}
+
+.hamburger::before {
+    top: -8px;
+}
+
+.hamburger::after {
+    bottom: -8px;
+}
+
+/* Hamburger Open States */
+.hamburgerOpen {
+    background-color: transparent;
+}
+
+.hamburgerOpen::before {
+    top: 0;
+    transform: rotate(45deg);
+}
+
+.hamburgerOpen::after {
+    bottom: 0;
+    transform: rotate(-45deg);
+}
+
+/* Mobile Media Query */
+@media (max-width: 768px) {
+    .header {
+        padding: 1rem 1.5rem;
+    }
+
+    .menuToggle {
+        display: block;
+    }
+
+    .nav {
+        flex-direction: column;
+        justify-content: center;
+        position: fixed;
+        top: 0;
+        right: -100%; /* Hidden by default */
+        width: 100%;
+        height: 100vh;
+        background-color: var(--bg-dark);
+        padding: 2rem;
+        transition: right 0.3s ease-in-out;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .navOpen {
+        right: 0; /* Slide in */
+    }
+
+    .link {
+        font-size: 1.5rem;
+    }
+
+    .cartLink {
+        font-size: 1.5rem;
+    }
+
+    .userWelcome {
+        margin-right: 0;
+        font-size: 1.25rem;
+        flex-direction: column;
+        margin-bottom: 1rem;
+    }
+
+    .buttonBase {
+        width: 100%;
+        max-width: 300px;
+    }
 }

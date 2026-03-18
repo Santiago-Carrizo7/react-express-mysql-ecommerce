@@ -184,6 +184,7 @@
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -255,4 +256,19 @@
 
 @media (max-width: 768px) {
   .scrollButton { display: none; }
+  
+  .mainContent {
+    gap: 2rem;
+    padding: 0 1rem;
+  }
+  
+  .featuresGrid {
+    margin-top: -1rem;
+    gap: 1rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
 }

@@ -12,7 +12,7 @@ export function Register () {
         formState: { errors },
     } = useForm<RegisterFormInputs>();
 
-    const { signup, loading } = useAuthStore();
+    const { signup, loading, errors: authErrors } = useAuthStore();
 
     const onSubmit = async (data: RegisterFormInputs) => {
         const success = await signup(data);
@@ -26,6 +26,14 @@ export function Register () {
             <div className={styles.card}>
                 <h1 className={styles.title}>Crear Cuenta</h1>
                 <p className={styles.subTitle}>Registrate para acceder a los mejores beneficios</p>
+
+                {authErrors.length > 0 && (
+                    <div className={styles.globalError}>
+                        {authErrors.map((error, index) => (
+                            <span key={index}>{error}</span>
+                        ))}
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
                     <label className={styles.label}>

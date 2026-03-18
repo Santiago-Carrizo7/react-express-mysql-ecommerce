@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/AuthStore.js"; 
 import { useCart } from "../../store/CartStore.js"; 
@@ -5,27 +6,36 @@ import styles from "./Header.module.css";
 
 export function Header() {
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { isAuthenticated, user, logout } = useAuthStore();
   const { cart } = useCart();
 
   const handleLogout = async () => {
     await logout();
+    setIsMenuOpen(false);
     navigate('/login'); 
   };
 
+  const closeMenu = () => setIsMenuOpen(false);
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
   return (
     <header className={styles.header}>
-      <Link to="/" className={styles.logo}>
+      <Link to="/" className={styles.logo} onClick={closeMenu}>
         Tienda Gamer 
       </Link>
 
-      <nav className={styles.nav}>
-        <Link to="/" className={styles.link}>Inicio</Link>
+      <button className={styles.menuToggle} onClick={toggleMenu} aria-label="Toggle menu">
+        <span className={`${styles.hamburger} ${isMenuOpen ? styles.hamburgerOpen : ''}`}></span>
+      </button>
 
-        <Link to="/products" className={styles.link}>Productos</Link>
+      <nav className={`${styles.nav} ${isMenuOpen ? styles.navOpen : ''}`}>
+        <Link to="/" className={styles.link} onClick={closeMenu}>Inicio</Link>
+
+        <Link to="/products" className={styles.link} onClick={closeMenu}>Productos</Link>
         
-        <Link to="/cart" className={styles.cartLink}>
+        <Link to="/cart" className={styles.cartLink} onClick={closeMenu}>
             Carrito
             {cart.length > 0 && <span className={styles.badge}>{cart.length}</span>}
         </Link>
@@ -45,8 +55,8 @@ export function Header() {
             </>
         ) : (
             <>
-              <Link to="/login" className={styles.link}>Ingresar</Link>
-              <Link to="/register" className={`${styles.buttonBase} ${styles.buttonPrimary}`}>
+              <Link to="/login" className={styles.link} onClick={closeMenu}>Ingresar</Link>
+              <Link to="/register" className={`${styles.buttonBase} ${styles.buttonPrimary}`} onClick={closeMenu}>
                   Registrarse
               </Link>
             </>
