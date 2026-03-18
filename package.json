@@ -4,10 +4,10 @@
   "description": "Un proyecto fullstack de e-commerce con React (Vite) en el frontend y Express + MySQL en el backend.",
   "main": "index.js",
   "scripts": {
-    "dev:client": "npm run dev --workspace=client",
-    "dev:backend": "npm run dev --workspace=server",
-    "build:client": "npm run build --workspace=client",
-    "build:backend": "npm run build --workspace=server",
+    "dev:client": "pnpm --filter ./client run dev",
+    "dev:backend": "pnpm --filter ./server run dev",
+    "build:client": "pnpm --filter ./client run build",
+    "build:backend": "pnpm --filter ./server run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "workspaces": [

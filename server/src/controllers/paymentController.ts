@@ -8,7 +8,7 @@ import { pool } from '../config/database.js';
 import type { Request, Response } from "express";
 import type { OrderFromDB, OrderStatus, PaymentStatus } from "../types/index.js";
 
-const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN || '' });
+const client = new MercadoPagoConfig({ accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN || '' });
 const preference = new Preference(client);
 const payment = new Payment(client);
 
@@ -16,26 +16,40 @@ export class PaymentController {
     static async createPaymentIntent(req: Request, res: Response): Promise<void> {
         const { orderId } = req.body;
 
+        const CLIENT_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+
         const products = await OrderModel.getAllByOrderId({ order_id: orderId });
         
         if (!products || products.length === 0 ) {
             res.status(404).json({ error: 'Orden no encontrada' });
             return;
         }
+
+        try {
+            const result = await preference.create({
+                body: {
+                    items: products.map((item: OrderFromDB) => ({
+                        id: item.product_id,
+                        title: item.name,
+                        quantity: item.quantity,
+                        unit_price: Number(item.price)
+                    })),
+                    external_reference: products[0]!.order_id,
+                    back_urls: {
+                        success: `${CLIENT_URL}/success`,
+                        failure: `${CLIENT_URL}/failure`,
+                        pending: `${CLIENT_URL}/pending`
+                    },
+                    auto_return: 'approved'
+                }
+            });
+            res.status(200).json({ init_point: result.init_point });
+        } catch (error) {
+            console.error(`[ERROR] Fallo al crear la preferencia de pago para la orden ${orderId}:`, error);
+            res.status(500).json({ error: 'Error al crear la preferencia de pago' });
+            return;
+        }
         
-        const result = await preference.create({
-            body: {
-                items: products.map((item: OrderFromDB) => ({
-                    id: item.product_id,
-                    title: item.name,
-                    quantity: item.quantity,
-                    unit_price: Number(item.price)
-                })),
-                external_reference: products[0]!.order_id
-            }
-        });
-        
-        res.json(result.init_point);
     }
 
     static async handleWebhook(req: Request, res: Response): Promise<void> {

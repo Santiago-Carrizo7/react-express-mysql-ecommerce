@@ -15,7 +15,9 @@ export class OrderController {
     const orderId = await OrderModel.create({
       input: { user_id: userId, ...result.data },
     });
+
     return res.status(201).json({
+      orderId,
       message: `Su orden se realizo correctamente. Su numero de orden es ${orderId}`,
     });
   }

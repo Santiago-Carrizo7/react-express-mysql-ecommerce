@@ -9,6 +9,9 @@ import { Login } from "./pages/login/Login.js";
 import { ProductsPage } from "./pages/productsPage/ProductsPage.js";
 import { Register } from "./pages/register/Register.js";
 import { Footer } from "./components/footer/Footer.js";
+import { Success } from "./components/success/Success.js";
+import { Pending } from "./components/pending/Pending.js";
+import { Failure } from "./components/failure/Failure.js";
 
 export default function App() {
   const { checkAuth } = useAuthStore();
@@ -28,6 +31,9 @@ export default function App() {
           <Route path="/cart" element={<Cart />} />
         </Route>
         <Route path="/products" element={<ProductsPage />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/pending" element={<Pending />} />
+        <Route path="/failure" element={<Failure />} />
       </Routes>
       <Footer />
     </>

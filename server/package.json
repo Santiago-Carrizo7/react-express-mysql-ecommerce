@@ -6,7 +6,7 @@
   "main": "app.js",
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node-dev src/app.ts",
+    "dev": "tsx watch --env-file=.env src/app.ts",
     "start": "node dist/app.js"
   },
   "dependencies": {
