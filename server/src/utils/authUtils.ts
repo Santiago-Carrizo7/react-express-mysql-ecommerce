@@ -29,14 +29,14 @@ export async function setAuthCookies(user: UserFromDB, res: Response): Promise<v
   res.cookie("access_token", accessToken, {
     httpOnly: true,
     secure: isProduction,
-    sameSite: "strict",
+    sameSite: "none",
     maxAge: 1000 * 60 * 60,
   });
 
   res.cookie("refresh_token", refreshToken, {
     httpOnly: true,
     secure: isProduction,
-    sameSite: "strict",
+    sameSite: "none",
     maxAge: 1000 * 60 * 60 * 24 * 7,
   });
 }

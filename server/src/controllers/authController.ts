@@ -64,7 +64,7 @@ export class AuthController {
       const isValid = await bcrypt.compare(password, user.password);
 
       if (!isValid) {
-        return res.status(401).json({ message: "La contraseña es incorrecta" });
+        return res.status(401).json({ error: "La contraseña es incorrecta" });
       }
 
       await setAuthCookies(user, res);
@@ -116,7 +116,7 @@ export class AuthController {
       res.cookie("access_token", newAccessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "none",
         maxAge: 1000 * 60 * 60,
       });
 

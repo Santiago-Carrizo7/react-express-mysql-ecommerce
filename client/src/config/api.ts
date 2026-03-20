@@ -31,7 +31,7 @@ api.interceptors.response.use(
 
         if (error.response?.status === 401 && originalRequest) {
             if (originalRequest.url?.includes('/auth/login') || originalRequest.url?.includes('/auth/refresh')) {
-                return Promise.reject(new Error(errorMessage));
+                return Promise.reject(error);
             }
 
             if (!originalRequest._retry) {
@@ -60,15 +60,14 @@ api.interceptors.response.use(
                     
                     useAuthStore.setState({ user: null, isAuthenticated: false, errors: [] });
                     
-                    return Promise.reject(new Error('Sesión expirada. Por favor, inicie sesión nuevamente.'));
+                    return Promise.reject(refreshError);
                 } finally {
                     isRefreshing = false;
                 }
             }
         }
 
-        console.error("API Error:", errorMessage);
-        return Promise.reject(new Error(errorMessage));
+        return Promise.reject(error);
     }
 );
 
