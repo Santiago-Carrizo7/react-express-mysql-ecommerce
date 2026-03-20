@@ -9,7 +9,7 @@ import type { GetAllParams } from "../types/index.js";
 
 export class ProductController {
   static async getAll(req: Request, res: Response): Promise<void> {
-    const { minPrice, maxPrice, search } = req.query;
+    const { minPrice, maxPrice, search, order } = req.query;
     const rawCategories = req.query.categories ?? req.query.category ?? [];
     const categories = Array.isArray(rawCategories)
       ? rawCategories
@@ -22,6 +22,7 @@ export class ProductController {
       minPrice,
       maxPrice,
       search,
+      order,
     } as GetAllParams);
     res.json(products);
   }

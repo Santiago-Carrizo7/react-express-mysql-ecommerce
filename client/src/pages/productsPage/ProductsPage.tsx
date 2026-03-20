@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../../config/api.js";
 import { Spinner } from "../../components/spinner/Spinner.js";
 import { useCart } from "../../store/CartStore.js";
@@ -13,11 +13,14 @@ export function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [filters, setFilters] = useState<Filter>({
-    search: "",
-    categories: [],
-    minPrice: "",
-    maxPrice: "",
+    search: searchParams.get("search") || "",
+    categories: searchParams.getAll("categories"),
+    minPrice: searchParams.get("minPrice") || "",
+    maxPrice: searchParams.get("maxPrice") || "",
+    order: searchParams.get("order") || "",
   });
   const [categoriesList, setCategoriesList] = useState<Category[]>([]);
 
@@ -60,16 +63,25 @@ export function ProductsPage() {
   }, []);
 
   useEffect(() => {
-    fetchProducts(debouncedFilters);
-  }, [debouncedFilters]);
+    const params = new URLSearchParams();
+    if (debouncedFilters.search) params.set("search", debouncedFilters.search);
+    if (debouncedFilters.minPrice) params.set("minPrice", debouncedFilters.minPrice);
+    if (debouncedFilters.maxPrice) params.set("maxPrice", debouncedFilters.maxPrice);
+    if (debouncedFilters.order) params.set("order", debouncedFilters.order);
+    debouncedFilters.categories.forEach((cat) => params.append("categories", cat));
+    
+    setSearchParams(params, { replace: true });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    fetchProducts(debouncedFilters);
+  }, [debouncedFilters, setSearchParams]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleClear = () => {
-    setFilters({ search: "", categories: [], minPrice: "", maxPrice: "" });
+    setFilters({ search: "", categories: [], minPrice: "", maxPrice: "", order: "" });
   };
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,6 +175,20 @@ export function ProductsPage() {
                   onChange={handleChange}
                 />
               </div>
+            </div>
+
+            <div className={styles.filterGroup}>
+              <label className={styles.filterLabel}>Ordenar por</label>
+              <select
+                name="order"
+                className={styles.searchInput}
+                value={filters.order}
+                onChange={handleChange}
+              >
+                <option value="">Destacados</option>
+                <option value="price_asc">Menor precio</option>
+                <option value="price_desc">Mayor precio</option>
+              </select>
             </div>
           </form>
         </aside>

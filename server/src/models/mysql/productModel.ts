@@ -12,6 +12,7 @@ export class ProductModel {
     minPrice = "",
     maxPrice = "",
     search = "",
+    order = "",
   }: GetAllParams = {}) {
     let sql = `
       SELECT 
@@ -46,6 +47,12 @@ export class ProductModel {
     if (search) {
       sql += ` AND p.name LIKE ?`;
       params.push(`%${search}%`);
+    }
+
+    if (order === "price_asc") {
+      sql += ` ORDER BY p.price ASC`;
+    } else if (order === "price_desc") {
+      sql += ` ORDER BY p.price DESC`;
     }
 
     const [products] =

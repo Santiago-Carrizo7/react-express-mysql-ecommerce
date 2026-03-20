@@ -38,4 +38,5 @@ export interface Filter {
   categories: string[];
   minPrice: string;
   maxPrice: string;
+  order: string;
 };

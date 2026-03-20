@@ -20,7 +20,8 @@ export interface GetAllParams {
     categories?: string[], 
     minPrice?: string, 
     maxPrice?: string, 
-    search?: string 
+    search?: string,
+    order?: string
 }
 
 export interface RefreshToken {
