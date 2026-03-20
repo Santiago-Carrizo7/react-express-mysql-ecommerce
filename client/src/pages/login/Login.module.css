@@ -72,6 +72,48 @@
     box-shadow: 0 0 0 2px rgba(2, 177, 169, 0.2);
 }
 
+.passwordWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.passwordInput {
+    background-color: var(--bg-dark); 
+    border: 1px solid var(--neutral-light);
+    color: var(--pure-white);
+    padding: 0.875rem 2.5rem 0.875rem 1rem;
+    border-radius: var(--radius-md);
+    outline: none;
+    transition: all var(--transition-fast);
+    font-family: var(--font-main);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.passwordInput:focus {
+    border-color: var(--primary-teal); 
+    box-shadow: 0 0 0 2px rgba(2, 177, 169, 0.2);
+}
+
+.toggleBtn {
+    position: absolute;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    color: var(--neutral-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem;
+    transition: color var(--transition-fast);
+}
+
+.toggleBtn:hover {
+    color: var(--pure-white);
+}
+
 .button {
     background-color: var(--primary-teal); 
     color: var(--bg-dark); 
