@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -9,12 +8,13 @@ import { UserModel } from "../models/mysql/userModel.js";
 import { RefreshTokenModel } from "../models/mysql/refreshTokenModel.js";
 
 import { SALT_ROUNDS, SECRET_JWT_KEY } from "../config/config.js";
+import { setAuthCookies } from "../utils/authUtils.js";
 
-import type { Request, Response } from "express";
+import type { Request, Response, NextFunction } from "express";
 import type { UserFromDB } from "../types/index.js";
 
 export class AuthController {
-  static async register(req: Request, res: Response): Promise<Response> {
+  static async register(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     const result = validateUser(req.body);
 
     if (!result.success) {
@@ -33,20 +33,19 @@ export class AuthController {
         email,
         password: hashedPassword,
         phone,
-      });
+      }) as UserFromDB;
 
-      return res
-        .status(201)
-        .json({ message: "Usuario registrado", user: newUser });
+      await setAuthCookies(newUser, res);
+
+      const { password: _, ...publicUser } = newUser;
+
+      return res.status(201).json({ user: publicUser });
     } catch (e) {
-      console.error("Error en authController register:", e);
-      return res
-        .status(500)
-        .json({ error: "Hubo un error al registrar el usuario" });
+      next(e);
     }
   }
 
-  static async login(req: Request, res: Response): Promise<Response> {
+  static async login(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     const result = validateLogin(req.body);
 
     if (!result.success) {
@@ -68,47 +67,17 @@ export class AuthController {
         return res.status(401).json({ message: "La contraseña es incorrecta" });
       }
 
-      const accessToken = jwt.sign(
-        { id: user.id, email: user.email },
-        SECRET_JWT_KEY,
-        { expiresIn: "15Min" },
-      );
-
-      const refreshToken = randomUUID();
-
-      const expirationDate = new Date();
-      expirationDate.setDate(expirationDate.getDate() + 7);
-
-      await RefreshTokenModel.create({
-        token: refreshToken,
-        user_id: user.id,
-        expiresAt: expirationDate,
-      });
-
-      res.cookie("access_token", accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 1000 * 60 * 60,
-      });
-
-      res.cookie("refresh_token", refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 1000 * 60 * 60 * 24 * 7,
-      });
+      await setAuthCookies(user, res);
 
       const { password: _, ...publicUser } = user;
 
       return res.json({ message: "Login exitoso", user: publicUser });
     } catch (e) {
-      console.error("Error en el login:", e);
-      return res.status(500).json({ error: "Error interno del servidor" });
+      next(e);
     }
   }
 
-  static async refresh(req: Request, res: Response): Promise<Response> {
+  static async refresh(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     const refreshToken = req.cookies.refresh_token;
 
     if (!refreshToken) {
@@ -153,25 +122,28 @@ export class AuthController {
 
       return res.json({ message: "Token refrescado" });
     } catch (e) {
-      console.error("Error en refresh:", e);
-      return res.status(500).json({ error: "Error interno" });
+      next(e);
     }
   }
 
-  static async logout(req: Request, res: Response): Promise<Response> {
-    const refresh_token = req.cookies.refresh_token;
+  static async logout(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const refresh_token = req.cookies.refresh_token;
 
-    if (refresh_token) {
-      await RefreshTokenModel.delete({ token: refresh_token });
+      if (refresh_token) {
+        await RefreshTokenModel.delete({ token: refresh_token });
+      }
+
+      res.clearCookie("access_token");
+      res.clearCookie("refresh_token");
+
+      return res.json({ message: "Logout exitoso" });
+    } catch (e) {
+      next(e);
     }
-
-    res.clearCookie("access_token");
-    res.clearCookie("refresh_token");
-
-    return res.json({ message: "Logout exitoso" });
   }
 
-  static async verifyAuth(req: Request, res: Response): Promise<Response> {
+  static async verifyAuth(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     const { id } = req.session.user;
 
     try {
@@ -183,8 +155,7 @@ export class AuthController {
 
       return res.json({ user });
     } catch (e) {
-      console.error("Error en verify:", e);
-      return res.status(500).json({ error: "Error del servidor" });
+      next(e);
     }
   }
 }
