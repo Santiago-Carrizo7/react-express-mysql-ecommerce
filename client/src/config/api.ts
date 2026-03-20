@@ -59,7 +59,6 @@ api.interceptors.response.use(
                     processQueue(refreshError);
                     
                     useAuthStore.setState({ user: null, isAuthenticated: false, errors: [] });
-                    window.location.href = '/login';
                     
                     return Promise.reject(new Error('Sesión expirada. Por favor, inicie sesión nuevamente.'));
                 } finally {
