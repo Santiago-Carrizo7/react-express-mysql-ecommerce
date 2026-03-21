@@ -19,7 +19,7 @@ export function Register () {
     const onSubmit = async (data: RegisterFormInputs) => {
         const success = await signup(data);
         if(success) {
-            navigate('/home')
+            navigate('/')
         }
     }
 
